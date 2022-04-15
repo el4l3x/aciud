@@ -31,5 +31,9 @@ class initialSeeder extends Seeder
             'username' => 'Director General',
             'password' => Hash::make('00000000')
         ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Coordinacion de Tecnologia e Informatica',
+        ]);
     }
 }
