@@ -33,7 +33,47 @@ class initialSeeder extends Seeder
         ]);
         
         DB::table('organismos')->insert([
-            'nombre' => 'Coordinacion de Tecnologia e Informatica',
+            'nombre' => 'Coordinación de tecnología e informática',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Dirección de desarrollo social',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Dirección de Ingeniería Municipal',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Dirección de servicios Públicos municipales',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Dirección de Catastro y Ejido',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Instituto autónomo de la policía municipal',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Protección civil',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Protección del niño',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Registro civil',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Instituto para la mujer',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Instituto municipal para la vivienda',
         ]);
     }
 }

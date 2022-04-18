@@ -24,7 +24,8 @@ class SolicitudController extends Controller
      */
     public function index()
     {
-        $solicitudes = Solicitud::all();
+        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->get();
+        //return $solicitudes;
         return view('solicituds.index')
             ->with('solicitudes', $solicitudes);
     }
