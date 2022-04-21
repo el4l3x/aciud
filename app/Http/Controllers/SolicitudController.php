@@ -129,7 +129,41 @@ class SolicitudController extends Controller
      */
     public function show($id)
     {
-        //
+        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->findOrFail($id);
+        
+        return view('solicituds.show')
+            ->with('solicitudes', $solicitudes);
+    }
+    
+    public function rf(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'desde' => 'required|date',
+            'hasta' => 'required|date'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+
+        if ($request->desde < $request->hasta) {
+            $desde = $request->desde;
+            $hasta = $request->hasta;
+        } else {
+            $hasta = $request->desde;
+            $desde = $request->hasta;
+        }
+
+        $fecha_inicial = new Carbon($desde);
+		$fecha_final = new Carbon($hasta);
+
+        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->where('created_at', '<=', $fecha_final)->where('created_at', '>=', $fecha_inicial)->get();
+
+        //return $solicitudes;
+        return view('solicituds.index')
+            ->with('solicitudes', $solicitudes);
     }
 
     /**
@@ -140,7 +174,10 @@ class SolicitudController extends Controller
      */
     public function edit($id)
     {
-        //
+        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->findOrFail($id);
+        
+        return view('solicituds.edit')
+            ->with('solicitudes', $solicitudes);
     }
 
     /**

@@ -27,5 +27,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/chpass', 'HomeController@chpass')->name('chpass');
 Route::post('/updatepass', 'HomeController@updatepass')->name('updatepass');
 
+//SOLICITUDS
 Route::resource('solicitudes', 'SolicitudController');
+Route::post('/solicitudes/rf', 'SolicitudController@rf');
 

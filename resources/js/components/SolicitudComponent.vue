@@ -76,14 +76,14 @@
     >
 
       <template #cell(actions)="row">
-        <b-button v-b-tooltip.hover title="Eliminar" size="sm" @click="deletemodal(row.item, row.index, $event.target)" class="mr-1" variant="danger">
-          <b-icon-trash></b-icon-trash>
-        </b-button>
-        <b-button v-b-tooltip.hover title="Ver Detalles" size="sm" @click="deletemodal(row.item, row.index, $event.target)" class="mr-1" variant="secondary">
+        <b-button :href="urlShow(row.item)" target="blank" v-b-tooltip.hover title="Ver Detalles" size="sm" class="mr-1" variant="secondary">
           <b-icon-search></b-icon-search>
         </b-button>
-        <b-button v-b-tooltip.hover title="Editar" size="sm" @click="deletemodal(row.item, row.index, $event.target)" class="mr-1" variant="info">
+        <b-button :href="urlEdit(row.item)" v-b-tooltip.hover title="Editar" size="sm" class="mr-1" variant="info">
           <b-icon-pencil-fill></b-icon-pencil-fill>
+        </b-button>
+        <b-button v-b-tooltip.hover title="Eliminar" size="sm" @click="deletemodal(row.item, row.index, $event.target)" class="mr-1" variant="danger">
+          <b-icon-trash></b-icon-trash>
         </b-button>
       </template>
 
@@ -187,9 +187,6 @@
           },
           {
             key: 'created_at',
-            formatter: (value, key, item) => {
-              return new Date(value).toLocaleDateString()
-            },
             label: 'Fecha',
             sortable: true,
             thClass: 'text-center negrita',
@@ -254,6 +251,14 @@
         this.deleteModal.idDelete = item.id
         this.deleteModal.content = `Esta seguro que desea borrar la solicitud: ${item.codigo}??`
         this.$root.$emit('bv::show::modal', this.deleteModal.id, button)
+      },
+      urlShow(item) {
+        var url = "/solicitudes/"+item.id;
+        return url;
+      },
+      urlEdit(item) {
+        var url = "/solicitudes/"+item.id+"/edit";
+        return url;
       },
       resetDeleteModal() {
         this.deleteModal.title = ''

@@ -30,30 +30,31 @@
                             <div class="modal fade" id="sdateModal" tabindex="-1" role="dialog" aria-labelledby="sdateModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="sdateModalLabel">Filtrar por Fechas</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="form-row">
-                                                <div class="col">
-                                                    <label for="desde">Desde:</label>
-                                                    <input type="date" class="form-control" name="desde" id="desde">
-                                                </div>
-                                                <div class="col">
-                                                    <label for="hasta">Hasta:</label>
-                                                    <input type="date" class="form-control" name="hasta" id="hasta">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="sdateModalLabel">Filtrar por Fechas</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="POST" action="/solicitudes/rf">
+                                            <div class="modal-body">
+                                                @csrf
+                                                <div class="form-row">
+                                                    <div class="col">
+                                                        <label for="desde">Desde:</label>
+                                                        <input type="date" class="form-control" name="desde" id="desde">
+                                                    </div>
+                                                    <div class="col">
+                                                        <label for="hasta">Hasta:</label>
+                                                        <input type="date" class="form-control" name="hasta" id="hasta">
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                <button type="submit" class="btn btn-primary">Buscar</button>
+                                            </div>
                                         </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                                        <button type="button" class="btn btn-primary">Buscar</button>
-                                    </div>
                                     </div>
                                 </div>
                             </div>
