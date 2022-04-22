@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Solicitud;
 use App\Ciudadano;
+use App\Organismo;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -37,7 +38,9 @@ class SolicitudController extends Controller
      */
     public function create()
     {
-        return view('solicituds.create');
+        $organismos = Organismo::all();
+        return view('solicituds.create')
+            ->with('organismos', $organismos);
     }
 
     /**
@@ -59,6 +62,7 @@ class SolicitudController extends Controller
 				'parroquia' => 'required|string',
 				'telefono' => 'nullable|numeric',
 				'direccion' => 'required|string',
+				'organismo' => 'required|integer',
 				'desarrollo' => 'required'
 			]);
 	
@@ -71,7 +75,39 @@ class SolicitudController extends Controller
             
 			$consulta = Ciudadano::where('ci', $request->ci)->first();
             if (isset($consulta->ci)) {
-                return "Ciudadano ya registrado";
+                
+                $solicitud = new Solicitud();
+                if ($request->file('fileinput') != null) {
+                    $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
+                } else {
+                    $solicitud->anexo = "default.jpg";
+                }
+                $solicitud->tipo = $request->tipo;
+                $solicitud->desarrollo = $request->desarrollo;
+                $solicitud->ciudadano_id = $consulta->id;
+                $solicitud->organismo_id = $request->organismo;
+                
+                $solicitud->save();
+                
+                switch ($request->tipo) {
+                    case 'peticion':
+                        $solicitud->codigo = "P-".$solicitud->id;
+                        break;
+                        
+                    case 'reclamo':
+                        $solicitud->codigo = "R-".$solicitud->id;
+                        break;
+                            
+                    case 'denuncia':
+                        $solicitud->codigo = "D-".$solicitud->id;
+                        break;
+                }
+                
+                $solicitud->save();
+                            
+                DB::table('logs')->insert(
+                    ['accion' => 'Registro de nuevo Solicitud - Codigo '.$solicitud->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                );
                 
             } else {
                 $ciudadano = new Ciudadano();
@@ -99,8 +135,24 @@ class SolicitudController extends Controller
                 $solicitud->desarrollo = $request->desarrollo;
                 $solicitud->codigo = "P-".$solicitud->id;
                 $solicitud->ciudadano_id = $ciudadano->id;
-                $solicitud->organismo_id = 1;
+                $solicitud->organismo_id = $request->organismo;
                 
+                $solicitud->save();
+
+                switch ($request->tipo) {
+                    case 'peticion':
+                        $solicitud->codigo = "P-".$solicitud->id;
+                        break;
+                        
+                    case 'reclamo':
+                        $solicitud->codigo = "R-".$solicitud->id;
+                        break;
+                            
+                    case 'denuncia':
+                        $solicitud->codigo = "D-".$solicitud->id;
+                        break;
+                }
+
                 $solicitud->save();
                 
                 DB::table('logs')->insert(
@@ -175,9 +227,14 @@ class SolicitudController extends Controller
     public function edit($id)
     {
         $solicitudes = Solicitud::with('ciudadano')->with('organismo')->findOrFail($id);
+
+        $tipos = array('peticion', 'reclamo', 'denuncia');
+        $organismos = Organismo::all();
         
         return view('solicituds.edit')
-            ->with('solicitudes', $solicitudes);
+            ->with('solicitudes', $solicitudes)
+            ->with('tipos', $tipos)
+            ->with('organismos', $organismos);
     }
 
     /**
@@ -189,7 +246,122 @@ class SolicitudController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+			DB::beginTransaction();
+			$validator = Validator::make($request->all(), [
+				'nombre' => 'required|string',
+				'apellido' => 'required|string',
+				'ci' => 'required|numeric',
+				'institucion' => 'nullable|alpha_num',
+				'tipo' => 'required|alpha',
+				'parroquia' => 'required|string',
+				'telefono' => 'nullable|numeric',
+				'direccion' => 'required|string',
+				'organismo' => 'required|integer',
+				'desarrollo' => 'required'
+			]);
+	
+			if ($validator->fails()) {
+				return redirect()->back()
+							->withErrors($validator)
+							->withInput();
+			}
+
+            $solicitud = Solicitud::findOrFail($id);
+
+            $consulta = Ciudadano::where('ci', $request->ci)->first();
+            if (isset($consulta->ci)) {
+
+                if ($request->file('fileinput') != null) {
+                    $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
+                } else {
+                    $solicitud->anexo = "default.jpg";
+                }
+                $solicitud->tipo = $request->tipo;
+                $solicitud->desarrollo = $request->desarrollo;
+                switch ($request->tipo) {
+                    case 'peticion':
+                        $solicitud->codigo = "P-".$id;
+                        break;
+                        
+                    case 'reclamo':
+                        $solicitud->codigo = "R-".$id;
+                        break;
+                            
+                    case 'denuncia':
+                        $solicitud->codigo = "D-".$id;
+                        break;
+                }
+                $solicitud->ciudadano_id = $consulta->id;
+                $solicitud->organismo_id = $request->organismo;
+                
+                $solicitud->save();
+                
+                DB::table('logs')->insert(
+                    ['accion' => 'Actualizar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                );
+                
+                DB::commit();
+
+            } else {
+                $ciudadano = new Ciudadano();
+                $ciudadano->nombre = $request->nombre;
+                $ciudadano->apellido = $request->apellido;
+                $ciudadano->ci = $request->ci;
+                $ciudadano->institucion = $request->institucion;
+                $ciudadano->direccion = $request->direccion;
+                $ciudadano->telefono = $request->telefono;
+                $ciudadano->parroquia = $request->parroquia;
+                
+                $ciudadano->save();
+                
+                DB::table('logs')->insert(
+                    ['accion' => 'Registro de nuevo ciudadano - C.I '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                );
+
+                if ($request->file('fileinput') != null) {
+                    $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
+                } else {
+                    $solicitud->anexo = "default.jpg";
+                }
+                $solicitud->tipo = $request->tipo;
+                $solicitud->desarrollo = $request->desarrollo;
+                $solicitud->codigo = "P-".$solicitud->id;
+                $solicitud->ciudadano_id = $ciudadano->id;
+                $solicitud->organismo_id = $request->organismo;
+                
+                $solicitud->save();
+
+                switch ($request->tipo) {
+                    case 'peticion':
+                        $solicitud->codigo = "P-".$id;
+                        break;
+                        
+                    case 'reclamo':
+                        $solicitud->codigo = "R-".$id;
+                        break;
+                            
+                    case 'denuncia':
+                        $solicitud->codigo = "D-".$id;
+                        break;
+                }
+
+                $solicitud->save();
+                
+                DB::table('logs')->insert(
+                    ['accion' => 'Actualizar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                );
+                
+                DB::commit();
+            }            
+
+	        return redirect("/");
+
+		} catch (\Exception $e) {
+			DB::rollback();
+			return $e;
+			//return redirect()->back()->with('danger', 'Algo a fallado.');
+		}
     }
 
     /**
@@ -200,6 +372,12 @@ class SolicitudController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Solicitud::destroy($id);
+
+        DB::table('logs')->insert(
+            ['accion' => 'Eliminar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+        );
+
+		return $id;
     }
 }

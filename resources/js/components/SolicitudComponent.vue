@@ -247,7 +247,7 @@
         return new Date(Value);
       },
       deletemodal(item, index, button) {
-        this.deleteModal.title = `Borrar: ${item.product_name}`
+        this.deleteModal.title = `Borrar Solicitud`
         this.deleteModal.idDelete = item.id
         this.deleteModal.content = `Esta seguro que desea borrar la solicitud: ${item.codigo}??`
         this.$root.$emit('bv::show::modal', this.deleteModal.id, button)

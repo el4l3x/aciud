@@ -27,6 +27,10 @@
                                 @csrf
                                 
                                 <div class="form-row mb-4">
+                                    <div class="col-md-4 col-12">
+                                        <label for="ci">Cedula</label><br>
+                                        <input type="text" class="form-control" name="ci" id="ci" maxlength="255" required >
+                                    </div>
                                     <div class="col-md-4 col-12 mb-3">
                                         <label for="nombre">Nombre </label>
                                         <input type="text" class="form-control" name="nombre" id="nombre" maxlength="255" required >
@@ -34,10 +38,6 @@
                                     <div class="col-md-4 col-12 mb-3">
                                         <label for="apellido">Apellido</label><br>
                                         <input type="text" class="form-control" name="apellido" id="apellido" maxlength="255" required >
-                                    </div>
-                                    <div class="col-md-4 col-12">
-                                        <label for="ci">Cedula</label><br>
-                                        <input type="text" class="form-control" name="ci" id="ci" maxlength="255" required >
                                     </div>
                                 </div>
             
@@ -78,12 +78,31 @@
                                 </div>
             
                                 <div class="form-row mb-4">
+                                    
+                                    <div class="col-4">
+                                        <label for="organismo">Organismos</label>
+                                        <select name="organismo" id="organismo" class="form-control" data-width="100%" required>
+                                            <option selected disabled>Selecciona</option>
+                                            @foreach ($organismos as $i)
+                                                <option value="{{ $i->id }}">{{ $i->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
                                     <div class="col-4">
                                         <label for="telefono">Telefono</label>
                                         <input type="text" class="form-control" name="telefono" id="telefono" required>
                                     </div>
+
+                                    <div class="col-4">
+                                        <label for="direccion">Dirección</label>
+                                        <textarea class="form-control" name="direccion" id="direccion"></textarea>                                    
+                                    </div>                                     
                                     
-                                    <div class="col-8">
+                                </div>
+                                
+                                <div class="form-row mb-4">    
+                                    <div class="col-6">
                                         <label>Anexos</label><br>
                                         <div class="file-input-wrapper">
                                             <img class="img-fluid img-thumbnail shadow" style="height: 200px; display: none" id="foto">
@@ -95,17 +114,9 @@
                                             <label for="fileinput" class="btn btn-info">Buscar</label>
                                             <input id="fileinput" id="fileinput" name="fileinput" type="file" accept="image/*">
                                         </div>
-                                    </div>    
-                                    
-                                </div>
-                                
-                                <div class="form-row mb-4">    
-                                    <div class="col-4">
-                                        <label for="direccion">Dirección</label>
-                                        <textarea class="form-control" name="direccion" id="direccion"></textarea>                                    
                                     </div>
                                     
-                                    <div class="col-8">
+                                    <div class="col-6">
                                         <label for="desarrollo">Desarrollo</label>
                                         <textarea class="form-control" name="desarrollo" id="desarrollo"></textarea>
                                     </div>

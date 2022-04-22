@@ -22,22 +22,23 @@
                                 </div>
                             @endif
 
-                            <form method="POST" action="/solicitudes" enctype="multipart/form-data">
+                            <form method="POST" action="/solicitudes/{{ $solicitudes->id}}" enctype="multipart/form-data">
                                 
+                                @method('PUT')
                                 @csrf
                                 
                                 <div class="form-row mb-4">
                                     <div class="col-md-4 col-12 mb-3">
                                         <label for="nombre">Nombre </label>
-                                        <input type="text" class="form-control" name="nombre" id="nombre" maxlength="255" required >
+                                        <input type="text" class="form-control" name="nombre" id="nombre" value="{{ $solicitudes->ciudadano->nombre }}" maxlength="255" required >
                                     </div>
                                     <div class="col-md-4 col-12 mb-3">
                                         <label for="apellido">Apellido</label><br>
-                                        <input type="text" class="form-control" name="apellido" id="apellido" maxlength="255" required >
+                                        <input type="text" class="form-control" name="apellido" id="apellido" value="{{ $solicitudes->ciudadano->apellido }}" maxlength="255" required >
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <label for="ci">Cedula</label><br>
-                                        <input type="text" class="form-control" name="ci" id="ci" maxlength="255" required >
+                                        <input type="text" class="form-control" name="ci" id="ci" value="{{ $solicitudes->ciudadano->ci }}" maxlength="255" required >
                                     </div>
                                 </div>
             
@@ -45,12 +46,27 @@
                                     <div class="col-md-4 col-12 mb-3">
                                         <label for="institucion">Institución</label><br>
                                         <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">                                                
-                                                    <input type="checkbox" id="chk-int">
+
+                                            @if ($solicitudes->ciudadano->institucion != NULL)
+                                            
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">                                                
+                                                        <input type="checkbox" id="chk-int" checked>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <input type="text" class="form-control" disabled="true" id="inpt-int" name="institucion">
+                                                <input type="text" class="form-control" value="{{ $solicitudes->ciudadano->institucion }}" id="inpt-int" name="institucion">
+
+                                            @else
+                                                
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">                                                
+                                                        <input type="checkbox" id="chk-int">
+                                                    </div>
+                                                </div>
+                                                <input type="text" class="form-control" disabled="true" id="inpt-int" name="institucion">
+                                            
+                                            @endif
+
                                         </div>
                                         <small class="text-muted text-help">Nombre de la Institución</small>
                                     </div>
@@ -79,11 +95,29 @@
             
                                 <div class="form-row mb-4">
                                     <div class="col-4">
-                                        <label for="telefono">Telefono</label>
-                                        <input type="text" class="form-control" name="telefono" id="telefono" required>
+                                        <label for="organismo">Organismos</label>
+                                        <select name="organismo" id="organismo" class="form-control" data-width="100%" required>
+                                            <option selected disabled>Selecciona</option>
+                                            @foreach ($organismos as $i)
+                                                <option value="{{ $i->id }}">{{ $i->nombre }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
+                                     
+                                    <div class="col-4">
+                                        <label for="telefono">Telefono</label>
+                                        <input type="text" class="form-control" value="{{ $solicitudes->ciudadano->telefono }}" name="telefono" id="telefono" required>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label for="direccion">Dirección</label>
+                                        <textarea class="form-control" name="direccion" id="direccion">{{ $solicitudes->ciudadano->direccion }}</textarea>                                    
+                                    </div>                                    
                                     
-                                    <div class="col-8">
+                                </div>
+                                
+                                <div class="form-row mb-4">   
+                                    <div class="col-6">
                                         <label>Anexos</label><br>
                                         <div class="file-input-wrapper">
                                             <img class="img-fluid img-thumbnail shadow" style="height: 200px; display: none" id="foto">
@@ -97,17 +131,9 @@
                                         </div>
                                     </div>    
                                     
-                                </div>
-                                
-                                <div class="form-row mb-4">    
-                                    <div class="col-4">
-                                        <label for="direccion">Dirección</label>
-                                        <textarea class="form-control" name="direccion" id="direccion"></textarea>                                    
-                                    </div>
-                                    
-                                    <div class="col-8">
+                                    <div class="col-6">
                                         <label for="desarrollo">Desarrollo</label>
-                                        <textarea class="form-control" name="desarrollo" id="desarrollo"></textarea>
+                                        <textarea class="form-control" name="desarrollo" id="desarrollo">{{ $solicitudes->desarrollo }}</textarea>
                                     </div>
                                 </div>
                                 
