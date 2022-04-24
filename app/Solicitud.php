@@ -19,4 +19,9 @@ class Solicitud extends Model
     {
         return $this->belongsTo('App\Ciudadano');
     }
+
+    public function anexos()
+    {
+        return $this->hasMany('App\Anexo');
+    }
 }

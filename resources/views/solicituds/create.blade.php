@@ -112,7 +112,7 @@
                                             <p id="imgerror" class="text-danger" style="display: none;"></p>
                                             <label id="clearbtn" type="button" class="btn btn-info" style="display: none">Limpiar</label>
                                             <label for="fileinput" class="btn btn-info">Buscar</label>
-                                            <input id="fileinput" id="fileinput" name="fileinput" type="file" accept="image/*">
+                                            <input id="fileinput" id="fileinput" name="fileinput[]" type="file" accept="image/*" multiple>
                                         </div>
                                     </div>
                                     
@@ -147,6 +147,7 @@
 <script>
     $(document).ready(function() {
         $('#fileinput').change((e) => {
+
             var input = e.target;
 
             // imagen de preview

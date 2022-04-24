@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Solicitud;
 use App\Ciudadano;
 use App\Organismo;
+use App\Anexo;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -39,8 +40,11 @@ class SolicitudController extends Controller
     public function create()
     {
         $organismos = Organismo::all();
+        $select = Ciudadano::select('ci', 'nombre', 'apellido')->get();
+
         return view('solicituds.create')
-            ->with('organismos', $organismos);
+            ->with('organismos', $organismos)
+            ->with('ciudadanos', $select);
     }
 
     /**
@@ -71,40 +75,55 @@ class SolicitudController extends Controller
 							->withErrors($validator)
 							->withInput();
 			}
-
             
 			$consulta = Ciudadano::where('ci', $request->ci)->first();
+			$code = Solicitud::where('tipo', $request->tipo)->count();
             if (isset($consulta->ci)) {
                 
                 $solicitud = new Solicitud();
-                if ($request->file('fileinput') != null) {
+                /*if ($request->file('fileinput') != null) {
                     $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
                 } else {
                     $solicitud->anexo = "default.jpg";
-                }
+                }*/
                 $solicitud->tipo = $request->tipo;
                 $solicitud->desarrollo = $request->desarrollo;
                 $solicitud->ciudadano_id = $consulta->id;
                 $solicitud->organismo_id = $request->organismo;
                 
-                $solicitud->save();
-                
                 switch ($request->tipo) {
                     case 'peticion':
-                        $solicitud->codigo = "P-".$solicitud->id;
+                        $solicitud->codigo = "P-".$code;
+                        $typeabb = 'pet';
                         break;
                         
                     case 'reclamo':
-                        $solicitud->codigo = "R-".$solicitud->id;
+                        $solicitud->codigo = "R-".$code;
+                        $typeabb = 'rec';
                         break;
                             
                     case 'denuncia':
-                        $solicitud->codigo = "D-".$solicitud->id;
+                        $solicitud->codigo = "D-".$code;
+                        $typeabb = 'den';
                         break;
                 }
-                
+
                 $solicitud->save();
-                            
+
+                if ($request->file('fileinput') != null) {
+                    $i = 1;
+                    foreach($request->file('fileinput') as $file)
+                    {
+                        $anexos = new Anexo();
+                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                        $file->move(public_path().'/img/', $name);
+                        $anexos->nombre = $name;
+                        $anexos->solicitud_id = $solicitud->id;
+                        $i++;
+                        $anexos->save();
+                    }
+                }
+                     
                 DB::table('logs')->insert(
                     ['accion' => 'Registro de nuevo Solicitud - Codigo '.$solicitud->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
                 );
@@ -126,34 +145,50 @@ class SolicitudController extends Controller
                 );
                 
                 $solicitud = new Solicitud();
-                if ($request->file('fileinput') != null) {
+                /*if ($request->file('fileinput') != null) {
                     $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
                 } else {
                     $solicitud->anexo = "default.jpg";
-                }
+                }*/
                 $solicitud->tipo = $request->tipo;
                 $solicitud->desarrollo = $request->desarrollo;
                 $solicitud->codigo = "P-".$solicitud->id;
                 $solicitud->ciudadano_id = $ciudadano->id;
-                $solicitud->organismo_id = $request->organismo;
-                
-                $solicitud->save();
+                $solicitud->organismo_id = $request->organismo;          
 
                 switch ($request->tipo) {
                     case 'peticion':
-                        $solicitud->codigo = "P-".$solicitud->id;
+                        $solicitud->codigo = "P-".$code;
+                        $typeabb = 'pet';
                         break;
                         
                     case 'reclamo':
-                        $solicitud->codigo = "R-".$solicitud->id;
+                        $solicitud->codigo = "R-".$code;
+                        $typeabb = 'rec';
                         break;
                             
                     case 'denuncia':
-                        $solicitud->codigo = "D-".$solicitud->id;
+                        $solicitud->codigo = "D-".$code;
+                        $typeabb = 'den';
                         break;
                 }
-
+                
                 $solicitud->save();
+
+                if ($request->file('fileinput') != null) {
+                    $i = 1;
+                    foreach($request->file('fileinput') as $file)
+                    {
+                        $anexos = new Anexo();
+                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                        $file->move(public_path().'/img/', $name);
+                        $anexos->nombre = $name;
+                        $anexos->solicitud_id = $solicitud->id;
+                        $i++;
+                        $anexos->save();
+
+                    }
+                }                
                 
                 DB::table('logs')->insert(
                     ['accion' => 'Registro de nuevo Solicitud - Codigo '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]

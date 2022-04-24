@@ -19,7 +19,6 @@ class CreateSolicitudsTable extends Migration
             $table->string('codigo');
             $table->text('desarrollo');
             $table->enum('status', ['pendiente', 'en proceso', 'realizado', 'en espera de']);
-            $table->string('anexo');
             $table->unsignedBigInteger('ciudadano_id');
             $table->unsignedBigInteger('organismo_id');
  

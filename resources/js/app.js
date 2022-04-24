@@ -23,12 +23,18 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('solicitud-component', require('./components/SolicitudComponent.vue').default);
 Vue.component('create-solicitud-component', require('./components/solicituds/create.vue').default);
 
+Vue.component('select-sol', require('./components/solicituds/select.vue').default);
+
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+
+import vSelect from 'vue-select'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+import 'vue-select/dist/vue-select.css';
 
 // Make BootstrapVue available throughout your project
 Vue.use(BootstrapVue)
@@ -40,6 +46,8 @@ Vue.use(IconsPlugin)
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
+ Vue.component('v-select', vSelect)
 
 const app = new Vue({
     el: '#app',
