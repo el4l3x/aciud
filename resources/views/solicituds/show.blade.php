@@ -12,22 +12,12 @@
                         </div>
                         <div class="card-body">
 
-                            <div class="row">
-                                
-                                <div class="col-4">
-                                    {{ $solicitudes->ciudadano->nombre.' '.$solicitudes->ciudadano->apellido }}
-                                </div>
+                            <div class="row">                                
 
-                                <div class="col-8">
-                                    {{ $solicitudes->tipo.' '.$solicitudes->organismo->nombre.' '.$solicitudes->status }}
-                                </div>
-
-                            </div>
-                            
-                            <div class="row">
-                                
-                                <div class="col">
-                                    {{ $solicitudes->ciudadano->ci }}
+                                <div class="col-12">
+                                    <p class="text-capitalize">
+                                        {{ $solicitudes->tipo.' a '.$solicitudes->organismo->nombre.' actualmente '.$solicitudes->status }}
+                                    </p>
                                 </div>
 
                             </div>
@@ -35,11 +25,17 @@
                             <div class="row">
 
                                 <div class="col">
-                                    @if (isset($solicitudes->ciudadano->institucion))
-                                        {{ $solicitudes->ciudadano->institucion.' '.$solicitudes->ciudadano->telefono }}
-                                    @else
-                                        {{ $solicitudes->ciudadano->telefono }}
-                                    @endif
+                                    <p class="text-capitalize">Ciudadano: {{ $solicitudes->ciudadano->nombre.' '.$solicitudes->ciudadano->apellido }} C.I {{ $solicitudes->ciudadano->ci }}</p>
+                                </div>
+
+                                <div class="col">
+                                    <p class="text-capitalize">
+                                        @if (isset($solicitudes->ciudadano->institucion))
+                                            Institucion: {{ $solicitudes->ciudadano->institucion.' Telf.: '.$solicitudes->ciudadano->telefono }}
+                                        @else
+                                            Telf.: {{ $solicitudes->ciudadano->telefono }}
+                                        @endif
+                                    </p>
                                 </div>
 
                             </div>
@@ -47,7 +43,9 @@
                             <div class="row">
 
                                 <div class="col">
-                                    {{ $solicitudes->ciudadano->parroquia.'. '.$solicitudes->ciudadano->direccion }}                                    
+                                    <p class="text-capitalize">
+                                        {{ $solicitudes->ciudadano->parroquia.'. '.$solicitudes->ciudadano->direccion }}                                    
+                                    </p>
                                 </div>
 
                             </div>
@@ -55,7 +53,9 @@
                             <div class="row">
 
                                 <div class="col">
-                                    {{ $solicitudes->desarrollo }}
+                                    <p>
+                                        {{ $solicitudes->desarrollo }}
+                                    </p>
                                 </div>
 
                             </div>
