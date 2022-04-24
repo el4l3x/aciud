@@ -216,7 +216,7 @@ class SolicitudController extends Controller
      */
     public function show($id)
     {
-        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->findOrFail($id);
+        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->with('anexos')->findOrFail($id);
         
         return view('solicituds.show')
             ->with('solicitudes', $solicitudes);

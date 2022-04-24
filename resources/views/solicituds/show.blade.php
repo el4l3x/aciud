@@ -69,7 +69,7 @@
                                     
                                     <!-- Modal -->
                                     <div class="modal fade" id="before" tabindex="-1" role="dialog" aria-labelledby="beforeLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="beforeLabel">Anexos</h5>
@@ -78,20 +78,13 @@
                                                     </button>
                                                 </div>
                                             <div class="modal-body">
-                                                <div class="card-group">
-                                                    <div class="card">
-                                                        <img class="card-img-top" src="http://localhost/aciud/storage/app/public/{{ $solicitudes->anexo }}" alt="Cargando">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">Antes</h5>
+                                                <div class="card-columns">
+                                                    @foreach ($solicitudes->anexos as $item)                                                        
+                                                        <div class="card">
+                                                            <img class="card-img" src="http://localhost/aciud/public/img/{{ $item->nombre }}" alt="Cargando">
                                                         </div>
-                                                    </div>
-                                                    <div class="card">
-                                                        <img class="card-img-top" src="http://localhost/aciud/storage/app/public/{{ $solicitudes->anexo }}" alt="Card image cap">
-                                                        <div class="card-body">
-                                                            <h5 class="card-title">Despues</h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    @endforeach
+                                                  </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
