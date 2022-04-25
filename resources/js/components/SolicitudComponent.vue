@@ -85,6 +85,9 @@
         <b-button v-b-tooltip.hover title="Eliminar" size="sm" @click="deletemodal(row.item, row.index, $event.target)" class="mr-1" variant="danger">
           <b-icon-trash></b-icon-trash>
         </b-button>
+        <b-button v-b-tooltip.hover title="Cambiar Status" size="sm" @click="statusmodal(row.item, row.index, $event.target)" class="mr-1" variant="info">
+          <b-icon-exclamation-circle></b-icon-exclamation-circle>
+        </b-button>
       </template>
 
     </b-table>
@@ -138,6 +141,26 @@
         </b-button>
       </template>
     </b-modal>
+    
+    <!-- status modal -->
+    <b-modal :id="statusModal.id" :title="statusModal.title" @hide="resetStatusModal" @ok="statusOk(statusModal.idStatus)">
+      <template #default="{  }">
+        <b-form-select v-model="status" class="mb-3">
+          <b-form-select-option value="pendiente">Pendiente</b-form-select-option>
+          <b-form-select-option value="en proceso">En Proceso</b-form-select-option>
+          <b-form-select-option value="realizado">Realizado</b-form-select-option>
+          <b-form-select-option value="en espera de">En Espera De</b-form-select-option>
+        </b-form-select>
+      </template>
+      <template #modal-footer="{ ok, cancel }">
+        <b-button size="sm" variant="primary" @click="ok(statusModal.idStatus)">
+            Cambiar
+        </b-button>
+        <b-button size="sm" @click="cancel()">
+            Cancelar
+        </b-button>
+      </template>
+    </b-modal>
 
   </b-container>
 </template>
@@ -153,8 +176,8 @@
     },
     data() {
       return {
+        status: 'pendiente',
         filterOn: [],
-        datatab: [],
         fields: [
           {
             key: 'ciudadano',
@@ -211,6 +234,12 @@
           content: '',
           idDelete: ''
         },
+        statusModal: {
+          id: 'status-modal',
+          title: '',
+          content: '',
+          idStatus: ''
+        },
       }
     },
     computed: {
@@ -226,8 +255,6 @@
     mounted() {
       // Set the initial number of items
       this.totalRows = this.solicitudes.length;
-      // Asignar array para data
-      this.datatab = this.solicitudes;
     },
     methods: {
       deleteOk(id){
@@ -240,17 +267,31 @@
           console.log(e.response)
         });
       },
+      statusOk(id){
+        axios.post('/solicitudes/status/'+id, {
+          _method: 'post',
+          status: this.status
+        })
+        .then(response=>{
+            console.log(response);
+            //window.location = "/";
+        }).catch(e => {
+          console.log(e.response)
+        });
+      },
       nombreCompleto(value) {
         return `${value.nombre} ${value.apellido}`
-      },
-      formatoFecha(value) {
-        return new Date(Value);
       },
       deletemodal(item, index, button) {
         this.deleteModal.title = `Borrar Solicitud`
         this.deleteModal.idDelete = item.id
         this.deleteModal.content = `Esta seguro que desea borrar la solicitud: ${item.codigo}??`
         this.$root.$emit('bv::show::modal', this.deleteModal.id, button)
+      },
+      statusmodal(item, index, button) {
+        this.statusModal.title = `Cambiar Status`
+        this.statusModal.idStatus = item.id
+        this.$root.$emit('bv::show::modal', this.statusModal.id, button)
       },
       urlShow(item) {
         var url = "/solicitudes/"+item.id;
@@ -264,6 +305,10 @@
         this.deleteModal.title = ''
         this.deleteModal.content = ''
         this.deleteModal.idDelete = ''
+      },
+      resetStatusModal() {
+        this.statusModal.title = ''
+        this.statusModal.idStatus = ''
       },
       onFiltered(filteredItems) {
         // Trigger pagination to update the number of buttons/pages due to filtering

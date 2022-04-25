@@ -399,6 +399,42 @@ class SolicitudController extends Controller
 		}
     }
 
+    public function status(Request $request, $id)
+    {
+        try {
+			DB::beginTransaction();
+			$validator = Validator::make($request->all(), [
+				'status' => 'required|string',
+			]);
+	
+			if ($validator->fails()) {
+				return $validator->withErrors($validator);
+			}
+
+            $solicitud = Solicitud::find($id);
+
+            if (isset($solicitud->id)) {
+                $solicitud->status = $request->status;
+                $solicitud->save();
+
+                DB::table('logs')->insert(
+                    ['accion' => 'Actualizar Status Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                );
+
+                DB::commit();
+
+                return "Tuvo exito";
+            } else {
+                return "Algo fallo";
+            }
+
+		} catch (\Exception $e) {
+			DB::rollback();
+			return $e;
+			//return redirect()->back()->with('danger', 'Algo a fallado.');
+		}
+    }
+
     /**
      * Remove the specified resource from storage.
      *
