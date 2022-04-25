@@ -26,7 +26,8 @@
                                 
                                 @csrf
                                 
-                                <div class="form-row mb-4">
+                                <select-sol v-bind:ciudadanos="{{$ciudadanos}}"></select-sol>
+                                <!--<div class="form-row mb-4">
                                     <div class="col-md-4 col-12">
                                         <label for="ci">Cedula</label><br>
                                         <input type="text" class="form-control" name="ci" id="ci" maxlength="255" required >
@@ -39,7 +40,7 @@
                                         <label for="apellido">Apellido</label><br>
                                         <input type="text" class="form-control" name="apellido" id="apellido" maxlength="255" required >
                                     </div>
-                                </div>
+                                </div>-->
             
                                 <div class="form-row mb-4">
                                     <div class="col-md-4 col-12 mb-3">
