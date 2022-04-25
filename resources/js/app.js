@@ -25,10 +25,14 @@ Vue.component('create-solicitud-component', require('./components/solicituds/cre
 
 Vue.component('select-sol', require('./components/solicituds/select.vue').default);
 
+Vue.component('indices-graf', require('./components/solicituds/indices.vue').default);
+
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import vSelect from 'vue-select'
+
+import HighchartsVue from 'highcharts-vue'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -41,13 +45,16 @@ Vue.use(BootstrapVue)
 // Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin)
 
+Vue.use(HighchartsVue)
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
- Vue.component('v-select', vSelect)
+Vue.component('v-select', vSelect)
+
 
 const app = new Vue({
     el: '#app',

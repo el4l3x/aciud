@@ -481,9 +481,15 @@ class SolicitudController extends Controller
     
     public function graficas()
     {
-        //$solicitudes = Solicitud::with('ciudadano')->with('organismo')->get();
-        //return $solicitudes;
-        return view('solicituds.graficas');
-            //->with('solicitudes', $solicitudes);
+        $solicitudes = Solicitud::all()->count();
+        $peticiones = Solicitud::where('tipo', 'peticios')->count();
+        $reclamos = Solicitud::where('tipo', 'reclamo')->count();
+        $denuncias = Solicitud::where('tipo', 'denuncia')->count();
+
+        $data = array('solicitudes' => $solicitudes, 'peticiones' => $peticiones, 'reclamos' => $reclamos, 'denuncias' => $denuncias,);
+        //return $data;
+        return view('solicituds.graficas')
+        ->with('data', $data);
+        //return view('solicituds.graficas', compact($data));
     }
 }
