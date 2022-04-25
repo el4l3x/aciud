@@ -309,28 +309,43 @@ class SolicitudController extends Controller
 
                 if ($request->file('fileinput') != null) {
                     $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
-                } else {
-                    $solicitud->anexo = "default.jpg";
                 }
                 $solicitud->tipo = $request->tipo;
                 $solicitud->desarrollo = $request->desarrollo;
                 switch ($request->tipo) {
                     case 'peticion':
                         $solicitud->codigo = "P-".$id;
+                        $typeabb = 'pet';
                         break;
                         
                     case 'reclamo':
                         $solicitud->codigo = "R-".$id;
+                        $typeabb = 'rec';
                         break;
                             
                     case 'denuncia':
                         $solicitud->codigo = "D-".$id;
+                        $typeabb = 'den';
                         break;
                 }
                 $solicitud->ciudadano_id = $consulta->id;
                 $solicitud->organismo_id = $request->organismo;
                 
                 $solicitud->save();
+
+                if ($request->file('fileinput') != null) {
+                    $i = 1;
+                    foreach($request->file('fileinput') as $file)
+                    {
+                        $anexos = new Anexo();
+                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                        $file->move(public_path().'/img/', $name);
+                        $anexos->nombre = $name;
+                        $anexos->solicitud_id = $solicitud->id;
+                        $i++;
+                        $anexos->save();
+                    }
+                }
                 
                 DB::table('logs')->insert(
                     ['accion' => 'Actualizar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
@@ -354,11 +369,6 @@ class SolicitudController extends Controller
                     ['accion' => 'Registro de nuevo ciudadano - C.I '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
                 );
 
-                if ($request->file('fileinput') != null) {
-                    $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
-                } else {
-                    $solicitud->anexo = "default.jpg";
-                }
                 $solicitud->tipo = $request->tipo;
                 $solicitud->desarrollo = $request->desarrollo;
                 $solicitud->codigo = "P-".$solicitud->id;
@@ -370,18 +380,35 @@ class SolicitudController extends Controller
                 switch ($request->tipo) {
                     case 'peticion':
                         $solicitud->codigo = "P-".$id;
+                        $typeabb = 'pet';
                         break;
                         
                     case 'reclamo':
                         $solicitud->codigo = "R-".$id;
+                        $typeabb = 'rec';
                         break;
                             
                     case 'denuncia':
                         $solicitud->codigo = "D-".$id;
+                        $typeabb = 'den';
                         break;
                 }
 
                 $solicitud->save();
+
+                if ($request->file('fileinput') != null) {
+                    $i = 1;
+                    foreach($request->file('fileinput') as $file)
+                    {
+                        $anexos = new Anexo();
+                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                        $file->move(public_path().'/img/', $name);
+                        $anexos->nombre = $name;
+                        $anexos->solicitud_id = $solicitud->id;
+                        $i++;
+                        $anexos->save();
+                    }
+                }
                 
                 DB::table('logs')->insert(
                     ['accion' => 'Actualizar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
@@ -450,5 +477,13 @@ class SolicitudController extends Controller
         );
 
 		return $id;
+    }
+    
+    public function graficas()
+    {
+        //$solicitudes = Solicitud::with('ciudadano')->with('organismo')->get();
+        //return $solicitudes;
+        return view('solicituds.graficas');
+            //->with('solicitudes', $solicitudes);
     }
 }

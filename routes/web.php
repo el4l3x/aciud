@@ -31,4 +31,5 @@ Route::post('/updatepass', 'HomeController@updatepass')->name('updatepass');
 Route::resource('solicitudes', 'SolicitudController');
 Route::post('/solicitudes/rf', 'SolicitudController@rf');
 Route::post('/solicitudes/status/{id}', 'SolicitudController@status');
+Route::get('/graficos', 'SolicitudController@graficas')->name('graficos');
 
