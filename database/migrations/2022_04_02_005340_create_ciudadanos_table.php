@@ -18,7 +18,8 @@ class CreateCiudadanosTable extends Migration
             $table->string('nombre');
             $table->string('apellido');
             $table->integer('ci')->unique();
-            $table->string('direccion')->nullable();
+            $table->string('nacionalidad');
+            $table->string('sector')->nullable();
             $table->string('telefono')->nullable();
             $table->enum('parroquia', ['villa de cura', 'augusto mijares', 'magdaleno', 'san francisco de asis', 'valles de tucutunemo'])->default('villa de cura');
             $table->timestamps();

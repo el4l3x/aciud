@@ -15,11 +15,10 @@ class CreateInstitucionsTable extends Migration
     {
         Schema::create('institucions', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
+            $table->string('nombre')->unique();
             $table->string('direccion');
-            $table->unsignedBigInteger('ciudadano_id');
+            $table->string('telefono')->unique()->nullable();
 
-            $table->foreign('ciudadano_id')->references('id')->on('ciudadanos');
             $table->timestamps();
         });
     }
