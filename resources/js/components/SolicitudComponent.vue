@@ -79,13 +79,13 @@
         <b-button :href="urlShow(row.item)" target="blank" v-b-tooltip.hover title="Ver Detalles" size="sm" class="mr-1" variant="secondary">
           <b-icon-search></b-icon-search>
         </b-button>
-        <b-button :href="urlEdit(row.item)" v-b-tooltip.hover title="Editar" size="sm" class="mr-1" variant="info">
+        <b-button v-if="rol == 2" :href="urlEdit(row.item)" v-b-tooltip.hover title="Editar" size="sm" class="mr-1" variant="info">
           <b-icon-pencil-fill></b-icon-pencil-fill>
         </b-button>
         <b-button v-b-tooltip.hover title="Eliminar" size="sm" @click="deletemodal(row.item, row.index, $event.target)" class="mr-1" variant="danger">
           <b-icon-trash></b-icon-trash>
         </b-button>
-        <b-button v-b-tooltip.hover title="Cambiar Status" size="sm" @click="statusmodal(row.item, row.index, $event.target)" class="mr-1" variant="info">
+        <b-button v-if="rol != 1" v-b-tooltip.hover title="Cambiar Status" size="sm" @click="statusmodal(row.item, row.index, $event.target)" class="mr-1" variant="info">
           <b-icon-exclamation-circle></b-icon-exclamation-circle>
         </b-button>
       </template>
@@ -172,6 +172,11 @@
         type: Array,
         required: true,
         default: () => []
+      },
+      rol:{
+        type: Number,
+        required: true,
+        default: () => 1
       },
     },
     data() {

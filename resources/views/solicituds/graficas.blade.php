@@ -10,6 +10,15 @@
                         <div class="card-header d-flex justify-content-between mb-3">
                             <h3>Solicitudes</h3>
                             <div class="lead">
+                                <div class="dropdown">
+                                    <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Tipo
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="/graficos/total">Total</a>
+                                        <a class="dropdown-item" href="/graficos/status">Status</a>
+                                    </div>
+                                </div>
                                 <!--<a href="{{ route('solicitudes.create') }}">
                                     <b-icon icon="plus-square" type="button" variant="info" id="btn-plus"></b-icon>
                                     <b-tooltip target="btn-plus" triggers="hover">

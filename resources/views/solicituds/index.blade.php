@@ -10,12 +10,14 @@
                         <div class="card-header d-flex justify-content-between mb-3">
                             <h3>Solicitudes</h3>
                             <div class="lead">
-                                <a href="{{ route('solicitudes.create') }}">
-                                    <b-icon icon="plus-square" type="button" variant="info" id="btn-plus"></b-icon>
-                                    <b-tooltip target="btn-plus" triggers="hover">
-                                        Nueva Solicitud
-                                    </b-tooltip>                          
-                                </a>
+                                @if (auth()->user()->rol != 3)                                    
+                                    <a href="{{ route('solicitudes.create') }}">
+                                        <b-icon icon="plus-square" type="button" variant="info" id="btn-plus"></b-icon>
+                                        <b-tooltip target="btn-plus" triggers="hover">
+                                            Nueva Solicitud
+                                        </b-tooltip>                          
+                                    </a>
+                                @endif
 
                                 <a href="#" data-toggle="modal" data-target="#sdateModal">
                                     <b-icon icon="calendar3" type="button" variant="info" id="btn-date"></b-icon>
@@ -61,7 +63,7 @@
                             
                         </div>
                         <div class="card-body">
-                            <solicitud-component v-bind:solicitudes="{{$solicitudes}}"></solicitud-component>
+                            <solicitud-component v-bind:solicitudes="{{$solicitudes}}" v-bind:rol="{{auth()->user()->rol}}"></solicitud-component>
                         </div>
                     </div>
                 </div>

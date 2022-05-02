@@ -470,6 +470,7 @@ class SolicitudController extends Controller
      */
     public function destroy($id)
     {
+        Anexo::where('solicitud_id', $id)->delete();
         Solicitud::destroy($id);
 
         DB::table('logs')->insert(
@@ -479,17 +480,45 @@ class SolicitudController extends Controller
 		return $id;
     }
     
-    public function graficas()
+    public function graficas($tipo)
     {
-        $solicitudes = Solicitud::all()->count();
-        $peticiones = Solicitud::where('tipo', 'peticios')->count();
-        $reclamos = Solicitud::where('tipo', 'reclamo')->count();
-        $denuncias = Solicitud::where('tipo', 'denuncia')->count();
+        switch ($tipo) {
+            case 'total':
+                
+                //return $tipo;
+                $solicitudes = Solicitud::all()->count();
+                $peticiones = Solicitud::where('tipo', 'peticion')->count();
+                $reclamos = Solicitud::where('tipo', 'reclamo')->count();
+                $denuncias = Solicitud::where('tipo', 'denuncia')->count();
 
-        $data = array('solicitudes' => $solicitudes, 'peticiones' => $peticiones, 'reclamos' => $reclamos, 'denuncias' => $denuncias,);
-        //return $data;
-        return view('solicituds.graficas')
-        ->with('data', $data);
-        //return view('solicituds.graficas', compact($data));
+                $data = array('solicitudes' => $solicitudes, 'peticiones' => $peticiones, 'reclamos' => $reclamos, 'denuncias' => $denuncias, 'tipo' => $tipo,);
+                //return $data;
+                return view('solicituds.graficas')
+                ->with('data', $data);
+                //return view('solicituds.graficas', compact($data));
+
+                break;
+            
+            case 'status':
+                
+                $solicitudes = Solicitud::all()->count();
+                $pendiente = Solicitud::where('status', 'pendiente')->count();
+                $enproceso = Solicitud::where('status', 'en proceso')->count();
+                $realizado = Solicitud::where('status', 'realizado')->count();
+                $enesperade = Solicitud::where('status', 'en espera de')->count();
+
+                $data = array('solicitudes' => $solicitudes, 'pendiente' => $pendiente, 'enproceso' => $enproceso, 'realizado' => $realizado, 'enesperade' => $enesperade, 'tipo' => $tipo);
+                //return $data;
+                return view('solicituds.graficas')
+                ->with('data', $data);
+                //return view('solicituds.graficas', compact($data));
+
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        
     }
 }

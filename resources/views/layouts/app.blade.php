@@ -45,33 +45,37 @@
                         @guest
                             
                         @else
-                            <li class="nav-item dropdown">
+                            @if (auth()->user()->rol == 2)                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('graficos') }}">Indices de Gestion</a>
+                                    <a class="nav-link" href="/graficos/total">
+                                        <b-icon icon="pie-chart" type="button" variant="default" id="nav-chart"></b-icon>
+                                        <b-tooltip target="nav-chart" triggers="hover">
+                                            Indices de Gestion
+                                        </b-tooltip>
+                                    </a>
                                 </li>
-                            </li>
-                            
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
+                            @endif                            
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('chpass') }}">
-                                        {{ __('Cambiar clave') }}
-                                    </a>
+                            <b-nav-item-dropdown right>
+                                <template #button-content>
+                                    <b-icon icon="person" type="button" variant="default" id="nav-user"></b-icon>
+                                    <b-tooltip target="nav-user" triggers="hover">
+                                        {{ Auth::user()->name }}
+                                    </b-tooltip>
+                                </template>
+                                <b-dropdown-item href="{{ route('chpass') }}">
+                                    Cambiar clave
+                                </b-dropdown-item>
+                                <b-dropdown-item href="{{ route('logout') }}" 
+                                    onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                                    Salir
+                                </b-dropdown-item>
 
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Salir') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </b-nav-item-dropdown>
                         @endguest
                     </ul>
                 </div>
