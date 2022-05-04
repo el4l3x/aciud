@@ -28,8 +28,9 @@ class SolicitudController extends Controller
      */
     public function index()
     {
-        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->get();
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('beneficiarios')->with('involucrados')->get();
         //return $solicitudes;
+
         return view('solicituds.index')
             ->with('solicitudes', $solicitudes);
     }
@@ -446,7 +447,9 @@ class SolicitudController extends Controller
      */
     public function show($id)
     {
-        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->with('anexos')->findOrFail($id);
+        //$solicitudes = Solicitud::with('ciudadano')->with('organismo')->with('anexos')->findOrFail($id);
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('beneficiarios')->with('involucrados')->findOrFail($id);
+        //return $solicitudes;
         
         return view('solicituds.show')
             ->with('solicitudes', $solicitudes);

@@ -185,9 +185,28 @@
         filterOn: [],
         fields: [
           {
-            key: 'ciudadano',
+            key: 'beneficiarios',
             formatter: 'nombreCompleto',
-            label: 'Solicitante',
+            /*formatter: (value, key, item) => {
+              if (item.institucion != null) {
+                var idben = "1"
+                var nombre = "b"
+                item.involucrados.forEach(element => {
+                  if (element.status == "beneficiario") {
+                    idben = element.ciudadano_id
+                  }
+                });
+                item.beneficiarios.forEach(element => {
+                  if (element.id == idben) {
+                    nombre = element.nombre
+                  }
+                });
+                return nombre
+              } else {                
+                return item.institucion.nombre
+              }
+            },*/
+            label: 'Beneficiario',
             sortable: true,
             thClass: 'text-center negrita',
             tdClass: 'small text-center',
@@ -284,8 +303,27 @@
           console.log(e.response)
         });
       },
-      nombreCompleto(value) {
-        return `${value.nombre} ${value.apellido}`
+      nombreCompleto(value, key, item) {
+
+        if (item.institucion == null) {
+          var idben = "1"
+          var nombre = "b"
+          var involucrados = item.involucrados
+          item.involucrados.forEach(element => {
+            if (element.status == "beneficiario") {
+              idben = element.ciudadano_id
+            }
+          });
+          item.beneficiarios.forEach(element => {
+            if (element.id == idben) {
+              nombre = element.nombre+' '+element.apellido
+            }
+          });
+          return nombre
+        } else {                
+          return item.institucion.nombre
+        }
+        return "holis"
       },
       deletemodal(item, index, button) {
         this.deleteModal.title = `Borrar Solicitud`

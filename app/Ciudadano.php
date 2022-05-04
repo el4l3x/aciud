@@ -8,7 +8,9 @@ class Ciudadano extends Model
 {
     public function beneficiarios()
     {
-        return $this->hasMany('App\Beneficiario');
+        return $this->belongsToMany('App\Beneficiario')->using('App\Beneficiario')->withPivot([
+            'ciudadano_id',
+        ]);
     }
     
 }

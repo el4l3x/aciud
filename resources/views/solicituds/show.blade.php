@@ -22,33 +22,149 @@
 
                             </div>
 
-                            <div class="row">
+                            @if ($solicitudes->institucion != NULL)
 
-                                <div class="col">
-                                    <p class="text-capitalize">Ciudadano: {{ $solicitudes->ciudadano->nombre.' '.$solicitudes->ciudadano->apellido }} C.I {{ $solicitudes->ciudadano->ci }}</p>
+                                <div class="row">
+
+                                    <div class="col">
+                                        <p class="text-capitalize">Institucion: {{ $solicitudes->institucion->nombre }}</p>
+                                    </div>
+
+                                    <div class="col">
+                                        <p class="text-capitalize">
+                                            Telf.: {{ $solicitudes->institucion->telefono }}
+                                        </p>
+                                    </div>
+
                                 </div>
 
-                                <div class="col">
-                                    <p class="text-capitalize">
-                                        @if (isset($solicitudes->ciudadano->institucion))
-                                            Institucion: {{ $solicitudes->ciudadano->institucion.' Telf.: '.$solicitudes->ciudadano->telefono }}
-                                        @else
-                                            Telf.: {{ $solicitudes->ciudadano->telefono }}
-                                        @endif
-                                    </p>
+                                <div class="row">
+
+                                    <div class="col">
+                                        <p class="text-capitalize">
+                                            {{ $solicitudes->institucion->direccion }}                                    
+                                        </p>
+                                    </div>
+    
                                 </div>
 
-                            </div>
+                            @else
 
-                            <div class="row">
+                                @switch($solicitudes->dirigida)
+                                    @case("personal")                                        
+                                        <div class="row">                                            
 
-                                <div class="col">
-                                    <p class="text-capitalize">
-                                        {{ $solicitudes->ciudadano->parroquia.'. '.$solicitudes->ciudadano->direccion }}                                    
-                                    </p>
-                                </div>
+                                            <div class="col">
+                                                <p class="text-capitalize">Ciudadano: {{ $solicitudes['beneficiarios']['0']['nombre'].' '.$solicitudes['beneficiarios']['0']['apellido'] }} C.I {{ $solicitudes['beneficiarios']['0']['ci'] }}</p>
+                                            </div>
+        
+                                            <div class="col">
+                                                <p class="text-capitalize">
+                                                    @if (isset($solicitudes['beneficiarios']['0']['telefono']))
+                                                        Telf.: {{ $solicitudes['beneficiarios']['0']['telefono'] }}
+                                                    @endif
+                                                </p>
+                                            </div>
+        
+                                        </div>
 
-                            </div>
+                                        <div class="row">
+
+                                            <div class="col">
+                                                <p class="text-capitalize">
+                                                    {{ $solicitudes['beneficiarios']['0']['parroquia'].' '.$solicitudes['beneficiarios']['0']['sector'] }}                                    
+                                                </p>
+                                            </div>
+            
+                                        </div>
+                                        @break
+
+                                    @case("tercero")
+                                        @php
+                                            foreach ($solicitudes->involucrados as $key => $value) {
+                                                if ($value->status == "solicitante") {
+                                                    $idsol = $value->ciudadano_id;
+                                                }
+                                                
+                                                if ($value->status == "beneficiario") {
+                                                    $idben = $value->ciudadano_id;
+                                                }
+                                            }
+
+                                            foreach ($solicitudes->beneficiarios as $key => $value) {
+                                                switch ($value->id) {
+                                                    case $idsol:
+                                                        $solicitante = $value;
+                                                        break;
+                                                        
+                                                    case $idben:
+                                                        $beneficiario = $value;
+                                                        break;
+                                                    
+                                                    default:
+                                                        # code...
+                                                        break;
+                                                }
+                                            }
+                                        @endphp
+                                        <div class="row">                                            
+                                            <h5>Solicitante</h5>
+                                            <div class="col">
+                                                <p class="text-capitalize">Ciudadano: {{ $solicitante->nombre.' '.$solicitante->apellido }} C.I {{ $solicitante->ci }}</p>
+                                            </div>
+        
+                                            <div class="col">
+                                                <p class="text-capitalize">
+                                                    @if (isset($solicitante->telefono))
+                                                        Telf.: {{ $solicitante->telefono }}
+                                                    @endif
+                                                </p>
+                                            </div>
+        
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col">
+                                                <p class="text-capitalize">
+                                                    {{ $solicitante->parroquia.' '.$solicitante->sector }}                                    
+                                                </p>
+                                            </div>
+            
+                                        </div>
+                                        
+                                        <div class="row">                                            
+                                            <h5>Beneficiario</h5>
+                                            <div class="col">
+                                                <p class="text-capitalize">Ciudadano: {{ $beneficiario->nombre.' '.$beneficiario->apellido }} C.I {{ $beneficiario->ci }}</p>
+                                            </div>
+        
+                                            <div class="col">
+                                                <p class="text-capitalize">
+                                                    @if (isset($beneficiario->telefono))
+                                                        Telf.: {{ $beneficiario->telefono }}
+                                                    @endif
+                                                </p>
+                                            </div>
+        
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col">
+                                                <p class="text-capitalize">
+                                                    {{ $beneficiario->parroquia.' '.$beneficiario->sector }}                                    
+                                                </p>
+                                            </div>
+            
+                                        </div>
+
+                                        @break
+                                    @default
+                                        
+                                @endswitch                                
+
+                            @endif                            
 
                             <div class="row">
 

@@ -6,13 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Beneficiario extends Model
 {
-    public function solicitud()
+    public function posts()
     {
-        return $this->belongsTo('App\Solicitud');
-    }
 
-    public function ciudadanos()
-    {
-        return $this->belongsTo('App\Ciudadano');
     }
 }
