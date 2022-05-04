@@ -15,13 +15,18 @@ class Solicitud extends Model
         return $this->belongsTo('App\Organismo');
     }
 
-    public function ciudadano()
+    public function institucion()
     {
-        return $this->belongsTo('App\Ciudadano');
+        return $this->belongsTo('App\Institucion');
     }
 
     public function anexos()
     {
         return $this->hasMany('App\Anexo');
+    }
+    
+    public function beneficiarios()
+    {
+        return $this->hasMany('App\Beneficiario');
     }
 }

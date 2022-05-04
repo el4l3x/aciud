@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ciudadano extends Model
 {
-    public function solicituds()
+    public function beneficiarios()
     {
-        return $this->hasMany('App\Solicitud');
+        return $this->hasMany('App\Beneficiario');
     }
+    
 }
