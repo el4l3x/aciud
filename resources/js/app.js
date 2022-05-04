@@ -24,6 +24,9 @@ Vue.component('solicitud-component', require('./components/SolicitudComponent.vu
 Vue.component('create-solicitud-component', require('./components/solicituds/create.vue').default);
 
 Vue.component('select-sol', require('./components/solicituds/select.vue').default);
+Vue.component('select-ter', require('./components/solicituds/terceros.vue').default);
+Vue.component('select-ben', require('./components/solicituds/beneficiario.vue').default);
+Vue.component('select-ins', require('./components/solicituds/institucion.vue').default);
 
 Vue.component('indices-graf', require('./components/solicituds/indices.vue').default);
 

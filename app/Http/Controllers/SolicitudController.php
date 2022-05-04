@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Solicitud;
 use App\Ciudadano;
 use App\Organismo;
+use App\Institucion;
 use App\Anexo;
+use App\Beneficiario;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
@@ -40,11 +42,43 @@ class SolicitudController extends Controller
     public function create()
     {
         $organismos = Organismo::all();
-        $select = Ciudadano::select('ci', 'nombre', 'apellido')->get();
+        $select = Ciudadano::select('ci', 'nombre', 'apellido', 'telefono', 'parroquia', 'sector')->get();
 
         return view('solicituds.create')
             ->with('organismos', $organismos)
             ->with('ciudadanos', $select);
+    }
+    
+    public function createinst($tipo)
+    {
+        switch ($tipo) {
+            case 'terceros':
+
+                $organismos = Organismo::all();
+                $select = Ciudadano::select('ci', 'nombre', 'apellido', 'sector', 'parroquia', 'telefono')->get();
+
+                return view('solicituds.create.terceros')
+                    ->with('organismos', $organismos)
+                    ->with('ciudadanos', $select);
+
+                break;
+                
+            case 'institucional':
+                
+                $organismos = Organismo::all();
+                $select = Institucion::select('direccion', 'nombre', 'telefono')->get();
+
+                return view('solicituds.create.instituciones')
+                    ->with('organismos', $organismos)
+                    ->with('instituciones', $select);
+
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+        return $tipo;
     }
 
     /**
@@ -61,11 +95,10 @@ class SolicitudController extends Controller
 				'nombre' => 'required|string',
 				'apellido' => 'required|string',
 				'ci' => 'required|numeric',
-				'institucion' => 'nullable|alpha_num',
-				'tipo' => 'required|alpha',
 				'parroquia' => 'required|string',
+				'sector' => 'required|string',
 				'telefono' => 'nullable|numeric',
-				'direccion' => 'required|string',
+				'tipo' => 'required|alpha',
 				'organismo' => 'required|integer',
 				'desarrollo' => 'required'
 			]);
@@ -78,63 +111,137 @@ class SolicitudController extends Controller
             
 			$consulta = Ciudadano::where('ci', $request->ci)->first();
 			$code = Solicitud::where('tipo', $request->tipo)->count();
-            if (isset($consulta->ci)) {
+            if (!isset($consulta->ci)) {
                 
-                $solicitud = new Solicitud();
-                /*if ($request->file('fileinput') != null) {
-                    $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
-                } else {
-                    $solicitud->anexo = "default.jpg";
-                }*/
-                $solicitud->tipo = $request->tipo;
-                $solicitud->desarrollo = $request->desarrollo;
-                $solicitud->ciudadano_id = $consulta->id;
-                $solicitud->organismo_id = $request->organismo;
-                
-                switch ($request->tipo) {
-                    case 'peticion':
-                        $solicitud->codigo = "P-".$code;
-                        $typeabb = 'pet';
-                        break;
-                        
-                    case 'reclamo':
-                        $solicitud->codigo = "R-".$code;
-                        $typeabb = 'rec';
-                        break;
-                            
-                    case 'denuncia':
-                        $solicitud->codigo = "D-".$code;
-                        $typeabb = 'den';
-                        break;
-                }
-
-                $solicitud->save();
-
-                if ($request->file('fileinput') != null) {
-                    $i = 1;
-                    foreach($request->file('fileinput') as $file)
-                    {
-                        $anexos = new Anexo();
-                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
-                        $file->move(public_path().'/img/', $name);
-                        $anexos->nombre = $name;
-                        $anexos->solicitud_id = $solicitud->id;
-                        $i++;
-                        $anexos->save();
-                    }
-                }
-                     
-                DB::table('logs')->insert(
-                    ['accion' => 'Registro de nuevo Solicitud - Codigo '.$solicitud->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
-                );
-                
-            } else {
                 $ciudadano = new Ciudadano();
                 $ciudadano->nombre = $request->nombre;
                 $ciudadano->apellido = $request->apellido;
                 $ciudadano->ci = $request->ci;
-                $ciudadano->institucion = $request->institucion;
-                $ciudadano->direccion = $request->direccion;
+                $ciudadano->telefono = $request->telefono;
+                $ciudadano->sector = $request->sector;
+                $ciudadano->parroquia = $request->parroquia;
+                
+                $ciudadano->save();
+
+                $idciu = $ciudadano->id;
+                
+                DB::table('logs')->insert(
+                    ['accion' => 'Registro de nuevo ciudadano - C.I '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                );                
+                
+            } else {
+                $idciu = $consulta->id;
+            }
+
+            $solicitud = new Solicitud();
+
+            $solicitud->tipo = $request->tipo;
+            $solicitud->desarrollo = $request->desarrollo;
+            $solicitud->institucion_id = NULL;
+            $solicitud->organismo_id = $request->organismo;
+            
+            switch ($request->tipo) {
+                case 'peticion':
+                    $solicitud->codigo = "P-".$code;
+                    $typeabb = 'pet';
+                    break;
+                    
+                case 'reclamo':
+                    $solicitud->codigo = "R-".$code;
+                    $typeabb = 'rec';
+                    break;
+                        
+                case 'denuncia':
+                    $solicitud->codigo = "D-".$code;
+                    $typeabb = 'den';
+                    break;
+            }
+
+            $solicitud->save();
+
+            if ($request->file('fileinput') != null) {
+                $i = 1;
+                foreach($request->file('fileinput') as $file)
+                {
+                    $anexos = new Anexo();
+                    $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                    $file->move(public_path().'/img/', $name);
+                    $anexos->nombre = $name;
+                    $anexos->solicitud_id = $solicitud->id;
+                    $i++;
+                    $anexos->save();
+                }
+            }
+
+            $beneficiario = new Beneficiario();
+            $beneficiario->status = "solicitante";
+            $beneficiario->ciudadano_id = $idciu;
+            $beneficiario->solicitud_id = $solicitud->id;
+
+            $beneficiario->save();
+            
+            $beneficiario = new Beneficiario();
+            $beneficiario->status = "beneficiario";
+            $beneficiario->ciudadano_id = $idciu;
+            $beneficiario->solicitud_id = $solicitud->id;
+
+            $beneficiario->save();
+                    
+            DB::table('logs')->insert(
+                ['accion' => 'Registro de nuevo Solicitud - Codigo '.$solicitud->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+            );
+            
+            DB::commit();
+
+            //return "Ciudadano y Solicitud registrados exitosamente";
+
+	        return redirect("/");
+
+		} catch (\Exception $e) {
+			DB::rollback();
+			return $e;
+			//return redirect()->back()->with('danger', 'Algo a fallado.');
+		}
+    }
+    
+    public function storeter(Request $request)
+    {
+        try {
+			DB::beginTransaction();
+			$validator = Validator::make($request->all(), [
+				'nombre' => 'required|string',
+				'apellido' => 'required|string',
+				'ci' => 'required|numeric',
+				'parroquia' => 'required|string',
+				'sector' => 'required|string',
+				'telefono' => 'nullable|numeric',
+                'nombreb' => 'required|string',
+				'apellidob' => 'required|string',
+				'cib' => 'required|numeric',
+				'parroquiab' => 'required|string',
+				'sectorb' => 'required|string',
+				'telefonob' => 'nullable|numeric',
+				'tipo' => 'required|alpha',
+				'organismo' => 'required|integer',
+				'desarrollo' => 'required'
+			]);
+	
+			if ($validator->fails()) {
+				return redirect()->back()
+							->withErrors($validator)
+							->withInput();
+			}
+            
+			$consultasol = Ciudadano::where('ci', $request->ci)->first();
+			$consultaben = Ciudadano::where('ci', $request->cib)->first();
+			$code = Solicitud::where('tipo', $request->tipo)->count();
+
+            if (!isset($consultasol->ci)) {
+                $ciudadano = new Ciudadano();
+                $ciudadano->nombre = $request->nombre;
+                $ciudadano->apellido = $request->apellido;
+                $ciudadano->ci = $request->ci;
+                $ciudadano->sector = $request->sector;
                 $ciudadano->telefono = $request->telefono;
                 $ciudadano->parroquia = $request->parroquia;
                 
@@ -143,61 +250,184 @@ class SolicitudController extends Controller
                 DB::table('logs')->insert(
                     ['accion' => 'Registro de nuevo ciudadano - C.I '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
                 );
+
+                $idsol = $ciudadano->id;
+            } else {
+                $idsol = $consultasol->id;
+            }
+            
+            if (!isset($consultaben->ci)) {
+                $ciudadano = new Ciudadano();
+                $ciudadano->nombre = $request->nombreb;
+                $ciudadano->apellido = $request->apellidob;
+                $ciudadano->ci = $request->cib;
+                $ciudadano->sector = $request->sectorb;
+                $ciudadano->telefono = $request->telefonob;
+                $ciudadano->parroquia = $request->parroquiab;
                 
-                $solicitud = new Solicitud();
-                /*if ($request->file('fileinput') != null) {
-                    $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
-                } else {
-                    $solicitud->anexo = "default.jpg";
-                }*/
-                $solicitud->tipo = $request->tipo;
-                $solicitud->desarrollo = $request->desarrollo;
-                $solicitud->codigo = "P-".$solicitud->id;
-                $solicitud->ciudadano_id = $ciudadano->id;
-                $solicitud->organismo_id = $request->organismo;          
-
-                switch ($request->tipo) {
-                    case 'peticion':
-                        $solicitud->codigo = "P-".$code;
-                        $typeabb = 'pet';
-                        break;
-                        
-                    case 'reclamo':
-                        $solicitud->codigo = "R-".$code;
-                        $typeabb = 'rec';
-                        break;
-                            
-                    case 'denuncia':
-                        $solicitud->codigo = "D-".$code;
-                        $typeabb = 'den';
-                        break;
-                }
-                
-                $solicitud->save();
-
-                if ($request->file('fileinput') != null) {
-                    $i = 1;
-                    foreach($request->file('fileinput') as $file)
-                    {
-                        $anexos = new Anexo();
-                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
-                        $file->move(public_path().'/img/', $name);
-                        $anexos->nombre = $name;
-                        $anexos->solicitud_id = $solicitud->id;
-                        $i++;
-                        $anexos->save();
-
-                    }
-                }                
+                $ciudadano->save();
                 
                 DB::table('logs')->insert(
-                    ['accion' => 'Registro de nuevo Solicitud - Codigo '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                    ['accion' => 'Registro de nuevo ciudadano - C.I '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
                 );
-                
-                DB::commit();
-    
-                //return "Ciudadano y Solicitud registrados exitosamente";
+
+                $idben = $ciudadano->id;
+            } else {
+                $idben = $consultaben->id;
             }
+                
+            $solicitud = new Solicitud();
+            $solicitud->tipo = $request->tipo;
+            $solicitud->desarrollo = $request->desarrollo;
+            $solicitud->organismo_id = $request->organismo;
+            $solicitud->institucion_id = NULL;
+            
+            switch ($request->tipo) {
+                case 'peticion':
+                    $solicitud->codigo = "P-".$code;
+                    $typeabb = 'pet';
+                    break;
+                    
+                case 'reclamo':
+                    $solicitud->codigo = "R-".$code;
+                    $typeabb = 'rec';
+                    break;
+                        
+                case 'denuncia':
+                    $solicitud->codigo = "D-".$code;
+                    $typeabb = 'den';
+                    break;
+            }
+
+            $solicitud->save();
+
+            if ($request->file('fileinput') != null) {
+                $i = 1;
+                foreach($request->file('fileinput') as $file)
+                {
+                    $anexos = new Anexo();
+                    $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                    $file->move(public_path().'/img/', $name);
+                    $anexos->nombre = $name;
+                    $anexos->solicitud_id = $solicitud->id;
+                    $i++;
+                    $anexos->save();
+                }
+            }
+
+            $beneficiario = new Beneficiario();
+            $beneficiario->status = "solicitante";
+            $beneficiario->ciudadano_id = $idsol;
+            $beneficiario->solicitud_id = $solicitud->id;
+
+            $beneficiario->save();
+            
+            $beneficiario = new Beneficiario();
+            $beneficiario->status = "beneficiario";
+            $beneficiario->ciudadano_id = $idben;
+            $beneficiario->solicitud_id = $solicitud->id;
+
+            $beneficiario->save();
+                    
+            DB::table('logs')->insert(
+                ['accion' => 'Registro de nuevo Solicitud - Codigo '.$solicitud->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+            );
+
+            DB::commit();
+
+	        return redirect("/");
+
+		} catch (\Exception $e) {
+			DB::rollback();
+			return $e;
+			//return redirect()->back()->with('danger', 'Algo a fallado.');
+		}
+    }
+    
+    public function storeins(Request $request)
+    {
+        //return $request;
+        try {
+			DB::beginTransaction();
+			$validator = Validator::make($request->all(), [
+				'nombre' => 'required|string',
+				'telefono' => 'required|string',
+				'direccion' => 'required|string',
+				'tipo' => 'required|alpha',
+				'organismo' => 'required|integer',
+				'desarrollo' => 'required'
+			]);
+	
+			if ($validator->fails()) {
+				return redirect()->back()
+							->withErrors($validator)
+							->withInput();
+			}
+            
+			$consulta = Institucion::where('nombre', $request->nombre)->first();
+			$code = Solicitud::where('tipo', $request->tipo)->count();
+
+            if (!isset($consulta->nombre)) {
+                $institucion = new Institucion();
+                $institucion->nombre = $request->nombre;
+                $institucion->telefono = $request->telefono;
+                $institucion->direccion = $request->direccion;
+                
+                $institucion->save();
+                
+                DB::table('logs')->insert(
+                    ['accion' => 'Registro de nueva Institucion - Nombre '.$request->nombre, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+                );
+
+                $idins = $institucion->id;
+            } else {
+                $idins = $consulta->id;
+            }
+                
+            $solicitud = new Solicitud();
+            $solicitud->tipo = $request->tipo;
+            $solicitud->desarrollo = $request->desarrollo;
+            $solicitud->organismo_id = $request->organismo;
+            $solicitud->institucion_id = $idins;
+            
+            switch ($request->tipo) {
+                case 'peticion':
+                    $solicitud->codigo = "P-".$code;
+                    $typeabb = 'pet';
+                    break;
+                    
+                case 'reclamo':
+                    $solicitud->codigo = "R-".$code;
+                    $typeabb = 'rec';
+                    break;
+                        
+                case 'denuncia':
+                    $solicitud->codigo = "D-".$code;
+                    $typeabb = 'den';
+                    break;
+            }
+
+            $solicitud->save();
+
+            if ($request->file('fileinput') != null) {
+                $i = 1;
+                foreach($request->file('fileinput') as $file)
+                {
+                    $anexos = new Anexo();
+                    $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                    $file->move(public_path().'/img/', $name);
+                    $anexos->nombre = $name;
+                    $anexos->solicitud_id = $solicitud->id;
+                    $i++;
+                    $anexos->save();
+                }
+            }
+                    
+            DB::table('logs')->insert(
+                ['accion' => 'Registro de nuevo Solicitud - Codigo '.$solicitud->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+            );
+
+            DB::commit();
 
 	        return redirect("/");
 

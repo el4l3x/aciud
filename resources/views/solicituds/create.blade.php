@@ -27,60 +27,20 @@
                                 @csrf
                                 
                                 <select-sol v-bind:ciudadanos="{{$ciudadanos}}"></select-sol>
-                                <!--<div class="form-row mb-4">
-                                    <div class="col-md-4 col-12">
-                                        <label for="ci">Cedula</label><br>
-                                        <input type="text" class="form-control" name="ci" id="ci" maxlength="255" required >
-                                    </div>
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="nombre">Nombre </label>
-                                        <input type="text" class="form-control" name="nombre" id="nombre" maxlength="255" required >
-                                    </div>
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="apellido">Apellido</label><br>
-                                        <input type="text" class="form-control" name="apellido" id="apellido" maxlength="255" required >
-                                    </div>
-                                </div>-->
             
                                 <div class="form-row mb-4">
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="institucion">Institución</label><br>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">                                                
-                                                    <input type="checkbox" id="chk-int">
-                                                </div>
-                                            </div>
-                                            <input type="text" class="form-control" disabled="true" id="inpt-int" name="institucion">
-                                        </div>
-                                        <small class="text-muted text-help">Nombre de la Institución</small>
-                                    </div>
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="tipo">Tipo de Solicitud</label>
-                                        <select class="form-control" name="tipo" id="tipo-sol" data-width="100%" required>
+                                    
+                                    <div class="col-4">
+                                        <label for="tipo">Tipo</label>
+                                        <select name="tipo" id="tipo" class="form-control" data-width="100%" required>
                                             <option selected disabled>Selecciona</option>
                                             <option value="peticion">Peticion</option>
                                             <option value="reclamo">Reclamo</option>
                                             <option value="denuncia">Denuncia</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="parroquia">Parroquia</label><br>
-                                        <select name="parroquia" id="parroquia" class="form-control" data-width="100%">
-                                            <option selected disabled>Selecciona</option>
-                                            <option value="villa de cura">Villa de Cura</option>
-                                            <option value="augusto mijares">Augusto Mijares</option>
-                                            <option value="magdaleno">Magdaleno</option>
-                                            <option value="san francisco de asis">San Francisco de Asis</option>
-                                            <option value="valles de tucutunemo">Valles de Tucutunemo</option>
-                                        </select>
-                                    </div>
-            
-                                </div>
-            
-                                <div class="form-row mb-4">
-                                    
-                                    <div class="col-4">
+
+                                    <div class="col-6">
                                         <label for="organismo">Organismos</label>
                                         <select name="organismo" id="organismo" class="form-control" data-width="100%" required>
                                             <option selected disabled>Selecciona</option>
@@ -88,17 +48,7 @@
                                                 <option value="{{ $i->id }}">{{ $i->nombre }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="telefono">Telefono</label>
-                                        <input type="text" class="form-control" name="telefono" id="telefono" required>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="direccion">Dirección</label>
-                                        <textarea class="form-control" name="direccion" id="direccion"></textarea>                                    
-                                    </div>                                     
+                                    </div>                                 
                                     
                                 </div>
                                 
@@ -119,7 +69,7 @@
                                     
                                     <div class="col-6">
                                         <label for="desarrollo">Desarrollo</label>
-                                        <textarea class="form-control" name="desarrollo" id="desarrollo"></textarea>
+                                        <textarea class="form-control" name="desarrollo" cols="5" id="desarrollo"></textarea>
                                     </div>
                                 </div>
                                 

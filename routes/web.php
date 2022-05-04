@@ -29,6 +29,9 @@ Route::post('/updatepass', 'HomeController@updatepass')->name('updatepass');
 
 //SOLICITUDS
 Route::resource('solicitudes', 'SolicitudController');
+Route::get('/solicitudes/create/{tipo}', 'SolicitudController@createinst');
+Route::post('/solicitudes/store/terceros', 'SolicitudController@storeter');
+Route::post('/solicitudes/store/instituciones', 'SolicitudController@storeins');
 Route::post('/solicitudes/rf', 'SolicitudController@rf');
 Route::post('/solicitudes/status/{id}', 'SolicitudController@status');
 Route::get('/graficos/{tipo}', 'SolicitudController@graficas');

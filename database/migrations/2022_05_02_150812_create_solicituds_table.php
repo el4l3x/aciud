@@ -19,7 +19,7 @@ class CreateSolicitudsTable extends Migration
             $table->string('codigo');
             $table->text('desarrollo');
             $table->enum('status', ['pendiente', 'en proceso', 'realizado', 'en espera de']);
-            $table->unsignedBigInteger('institucion_id');
+            $table->unsignedBigInteger('institucion_id')->nullable();
             $table->unsignedBigInteger('organismo_id');
  
             $table->foreign('institucion_id')->references('id')->on('institucions'); 

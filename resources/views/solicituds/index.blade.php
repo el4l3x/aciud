@@ -10,13 +10,39 @@
                         <div class="card-header d-flex justify-content-between mb-3">
                             <h3>Solicitudes</h3>
                             <div class="lead">
-                                @if (auth()->user()->rol != 3)                                    
-                                    <a href="{{ route('solicitudes.create') }}">
+                                @if (auth()->user()->rol != 3)
+                                    <!-- Button trigger modal -->
+                                    <a href="" data-toggle="modal" data-target="#createModal">
                                         <b-icon icon="plus-square" type="button" variant="info" id="btn-plus"></b-icon>
                                         <b-tooltip target="btn-plus" triggers="hover">
                                             Nueva Solicitud
                                         </b-tooltip>                          
                                     </a>
+                                    
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                            <h5 class="modal-title" id="createModalLabel">Nueva Solicitud</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <a href="{{ route('solicitudes.create') }}" type="button" class="btn btn-secondary">Personal</a>
+                                                    <a href="/solicitudes/create/terceros" type="button" class="btn btn-secondary">A terceros</a>
+                                                    <a href="/solicitudes/create/institucional" type="button" class="btn btn-secondary">Institucional</a>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    
                                 @endif
 
                                 <a href="#" data-toggle="modal" data-target="#sdateModal">
