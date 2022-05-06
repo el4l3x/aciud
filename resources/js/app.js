@@ -28,7 +28,9 @@ Vue.component('select-ter', require('./components/solicituds/terceros.vue').defa
 Vue.component('select-ben', require('./components/solicituds/beneficiario.vue').default);
 Vue.component('select-ins', require('./components/solicituds/institucion.vue').default);
 
-Vue.component('indices-graf', require('./components/solicituds/indices.vue').default);
+Vue.component('indices-graf', require('./components/solicituds/graficas/indices.vue').default);
+Vue.component('indices-grafs', require('./components/solicituds/graficas/status.vue').default);
+Vue.component('indices-grafsti', require('./components/solicituds/graficas/tipo.vue').default);
 
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'

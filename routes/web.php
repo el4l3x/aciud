@@ -34,5 +34,7 @@ Route::post('/solicitudes/store/terceros', 'SolicitudController@storeter');
 Route::post('/solicitudes/store/instituciones', 'SolicitudController@storeins');
 Route::post('/solicitudes/rf', 'SolicitudController@rf');
 Route::post('/solicitudes/status/{id}', 'SolicitudController@status');
-Route::get('/graficos/{tipo}', 'SolicitudController@graficas');
+Route::get('/graficos/total', 'SolicitudController@graficast');
+Route::get('/graficos/status', 'SolicitudController@graficass');
+Route::get('/graficos/tipo', 'SolicitudController@graficasti');
 

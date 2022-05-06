@@ -713,45 +713,52 @@ class SolicitudController extends Controller
 		return $id;
     }
     
-    public function graficas($tipo)
+    public function graficast()
     {
-        switch ($tipo) {
-            case 'total':
-                
-                //return $tipo;
-                $solicitudes = Solicitud::all()->count();
-                $peticiones = Solicitud::where('tipo', 'peticion')->count();
-                $reclamos = Solicitud::where('tipo', 'reclamo')->count();
-                $denuncias = Solicitud::where('tipo', 'denuncia')->count();
+        //return $tipo;
+        $solicitudes = Solicitud::all()->count();
+        $peticiones = Solicitud::where('tipo', 'peticion')->count();
+        $reclamos = Solicitud::where('tipo', 'reclamo')->count();
+        $denuncias = Solicitud::where('tipo', 'denuncia')->count();
 
-                $data = array('solicitudes' => $solicitudes, 'peticiones' => $peticiones, 'reclamos' => $reclamos, 'denuncias' => $denuncias, 'tipo' => $tipo,);
-                //return $data;
-                return view('solicituds.graficas')
-                ->with('data', $data);
-                //return view('solicituds.graficas', compact($data));
+        $data = array('solicitudes' => $solicitudes, 'peticiones' => $peticiones, 'reclamos' => $reclamos, 'denuncias' => $denuncias,);
+        //return $data;
+        return view('solicituds.graficast')
+        ->with('data', $data);
+        //return view('solicituds.graficas', compact($data));
+        
+    }
+    
+    public function graficass()
+    {
+        //return $tipo;
+        $solicitudes = Solicitud::all()->count();
+        $pendiente = Solicitud::where('status', 'pendiente')->count();
+        $enproceso = Solicitud::where('status', 'en proceso')->count();
+        $realizado = Solicitud::where('status', 'realizado')->count();
+        $enesperade = Solicitud::where('status', 'en espera de')->count();
 
-                break;
-            
-            case 'status':
-                
-                $solicitudes = Solicitud::all()->count();
-                $pendiente = Solicitud::where('status', 'pendiente')->count();
-                $enproceso = Solicitud::where('status', 'en proceso')->count();
-                $realizado = Solicitud::where('status', 'realizado')->count();
-                $enesperade = Solicitud::where('status', 'en espera de')->count();
+        $data = array('solicitudes' => $solicitudes, 'pendiente' => $pendiente, 'enproceso' => $enproceso, 'realizado' => $realizado, 'enesperade' => $enesperade,);
+        //return $data;
+        return view('solicituds.graficass')
+        ->with('data', $data);
+        //return view('solicituds.graficas', compact($data));
+        
+    }
+    
+    public function graficasti()
+    {
+        //return $tipo;
+        $solicitudes = Solicitud::all()->count();
+        $peticion = Solicitud::where('tipo', 'peticion')->count();
+        $reclamo = Solicitud::where('tipo', 'reclamo')->count();
+        $denuncia = Solicitud::where('tipo', 'denuncia')->count();
 
-                $data = array('solicitudes' => $solicitudes, 'pendiente' => $pendiente, 'enproceso' => $enproceso, 'realizado' => $realizado, 'enesperade' => $enesperade, 'tipo' => $tipo);
-                //return $data;
-                return view('solicituds.graficas')
-                ->with('data', $data);
-                //return view('solicituds.graficas', compact($data));
-
-                break;
-            
-            default:
-                # code...
-                break;
-        }
+        $data = array('solicitudes' => $solicitudes, 'peticion' => $peticion, 'reclamo' => $reclamo, 'denuncia' => $denuncia,);
+        //return $data;
+        return view('solicituds.graficasti')
+        ->with('data', $data);
+        //return view('solicituds.graficas', compact($data));
         
     }
 }

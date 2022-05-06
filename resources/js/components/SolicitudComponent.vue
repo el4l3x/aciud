@@ -297,8 +297,8 @@
           status: this.status
         })
         .then(response=>{
-            console.log(response);
-            //window.location = "/";
+            //console.log(response);
+            window.location = "/";
         }).catch(e => {
           console.log(e.response)
         });
