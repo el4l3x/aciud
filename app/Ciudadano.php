@@ -12,5 +12,10 @@ class Ciudadano extends Model
             'ciudadano_id',
         ]);
     }
+
+    public function involucrados()
+    {
+        return $this->belongsToMany('App\Solicitud', 'beneficiarios', 'ciudadano_id', 'solicitud_id')->withPivot('status');
+    }
     
 }

@@ -82,22 +82,12 @@
                                     @case("tercero")
                                         @php
                                             foreach ($solicitudes->involucrados as $key => $value) {
-                                                if ($value->status == "solicitante") {
-                                                    $idsol = $value->ciudadano_id;
-                                                }
-                                                
-                                                if ($value->status == "beneficiario") {
-                                                    $idben = $value->ciudadano_id;
-                                                }
-                                            }
-
-                                            foreach ($solicitudes->beneficiarios as $key => $value) {
-                                                switch ($value->id) {
-                                                    case $idsol:
+                                                switch ($value->pivot->status) {
+                                                    case "solicitante":
                                                         $solicitante = $value;
                                                         break;
                                                         
-                                                    case $idben:
+                                                    case "beneficiario":
                                                         $beneficiario = $value;
                                                         break;
                                                     
@@ -197,7 +187,7 @@
                                                 <div class="card-columns">
                                                     @foreach ($solicitudes->anexos as $item)                                                        
                                                         <div class="card">
-                                                            <img class="card-img" src="http://localhost/aciud/public/img/{{ $item->nombre }}" alt="Cargando">
+                                                            <img class="card-img" src="http://localhost/aciud/public/anexos/{{ $item->nombre }}" alt="Cargando">
                                                         </div>
                                                     @endforeach
                                                   </div>

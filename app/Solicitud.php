@@ -26,7 +26,7 @@ class Solicitud extends Model
         return $this->hasMany('App\Anexo');
     }
 
-    public function beneficiarios()
+    /*public function beneficiarios()
     {
         return $this->hasManyThrough(
         'App\Ciudadano', // Modelo destino
@@ -41,5 +41,10 @@ class Solicitud extends Model
     public function involucrados()
     {
         return $this->hasMany('App\Beneficiario');
+    }*/
+    
+    public function involucrados()
+    {
+        return $this->belongsToMany('App\Ciudadano', 'beneficiarios', 'solicitud_id', 'ciudadano_id')->withPivot('status');
     }
 }

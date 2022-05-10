@@ -307,18 +307,19 @@
 
         if (item.institucion == null) {
           var idben = "1"
-          var nombre = "b"
+          var nombre = "error"
           var involucrados = item.involucrados
           item.involucrados.forEach(element => {
-            if (element.status == "beneficiario") {
-              idben = element.ciudadano_id
-            }
-          });
-          item.beneficiarios.forEach(element => {
-            if (element.id == idben) {
+            if (element.pivot.status == "beneficiario") {
+              idben = element.id
               nombre = element.nombre+' '+element.apellido
             }
           });
+          /*item.beneficiarios.forEach(element => {
+            if (element.id == idben) {
+              nombre = element.nombre+' '+element.apellido
+            }
+          });*/
           return nombre
         } else {                
           return item.institucion.nombre

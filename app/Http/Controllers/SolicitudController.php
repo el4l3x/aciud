@@ -28,7 +28,7 @@ class SolicitudController extends Controller
      */
     public function index()
     {
-        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('beneficiarios')->with('involucrados')->get();
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->get();
         //return $solicitudes;
 
         return view('solicituds.index')
@@ -140,6 +140,7 @@ class SolicitudController extends Controller
             $solicitud->desarrollo = $request->desarrollo;
             $solicitud->institucion_id = NULL;
             $solicitud->organismo_id = $request->organismo;
+            $solicitud->dirigida = 'personal';
             
             switch ($request->tipo) {
                 case 'peticion':
@@ -207,6 +208,7 @@ class SolicitudController extends Controller
     
     public function storeter(Request $request)
     {
+        return $request;
         try {
 			DB::beginTransaction();
 			$validator = Validator::make($request->all(), [
@@ -282,6 +284,7 @@ class SolicitudController extends Controller
             $solicitud->desarrollo = $request->desarrollo;
             $solicitud->organismo_id = $request->organismo;
             $solicitud->institucion_id = NULL;
+            $solicitud->dirigida = 'tercero';
             
             switch ($request->tipo) {
                 case 'peticion':
@@ -390,6 +393,7 @@ class SolicitudController extends Controller
             $solicitud->desarrollo = $request->desarrollo;
             $solicitud->organismo_id = $request->organismo;
             $solicitud->institucion_id = $idins;
+            $solicitud->dirigida = 'institucion';
             
             switch ($request->tipo) {
                 case 'peticion':
@@ -447,8 +451,8 @@ class SolicitudController extends Controller
      */
     public function show($id)
     {
-        //$solicitudes = Solicitud::with('ciudadano')->with('organismo')->with('anexos')->findOrFail($id);
-        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('beneficiarios')->with('involucrados')->findOrFail($id);
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->findOrFail($id);
+        //$solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('beneficiarios')->with('involucrados')->findOrFail($id);
         //return $solicitudes;
         
         return view('solicituds.show')
@@ -494,15 +498,16 @@ class SolicitudController extends Controller
      */
     public function edit($id)
     {
-        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->findOrFail($id);
-
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->findOrFail($id);
         $tipos = array('peticion', 'reclamo', 'denuncia');
         $organismos = Organismo::all();
+        //return $solicitudes;
         
         return view('solicituds.edit')
             ->with('solicitudes', $solicitudes)
             ->with('tipos', $tipos)
             ->with('organismos', $organismos);
+        
     }
 
     /**
@@ -517,14 +522,7 @@ class SolicitudController extends Controller
         try {
 			DB::beginTransaction();
 			$validator = Validator::make($request->all(), [
-				'nombre' => 'required|string',
-				'apellido' => 'required|string',
-				'ci' => 'required|numeric',
-				'institucion' => 'nullable|alpha_num',
 				'tipo' => 'required|alpha',
-				'parroquia' => 'required|string',
-				'telefono' => 'nullable|numeric',
-				'direccion' => 'required|string',
 				'organismo' => 'required|integer',
 				'desarrollo' => 'required'
 			]);
@@ -537,118 +535,59 @@ class SolicitudController extends Controller
 
             $solicitud = Solicitud::findOrFail($id);
 
-            $consulta = Ciudadano::where('ci', $request->ci)->first();
-            if (isset($consulta->ci)) {
-
-                if ($request->file('fileinput') != null) {
-                    $solicitud->anexo = explode('public/', $request->file('fileinput')->store('public'))[1];
-                }
-                $solicitud->tipo = $request->tipo;
-                $solicitud->desarrollo = $request->desarrollo;
-                switch ($request->tipo) {
-                    case 'peticion':
-                        $solicitud->codigo = "P-".$id;
-                        $typeabb = 'pet';
-                        break;
+            $solicitud->tipo = $request->tipo;
+            $solicitud->desarrollo = $request->desarrollo;
+            switch ($request->tipo) {
+                case 'peticion':
+                    $solicitud->codigo = "P-".$id;
+                    $typeabb = 'pet';
+                    break;
+                    
+                case 'reclamo':
+                    $solicitud->codigo = "R-".$id;
+                    $typeabb = 'rec';
+                    break;
                         
-                    case 'reclamo':
-                        $solicitud->codigo = "R-".$id;
-                        $typeabb = 'rec';
-                        break;
-                            
-                    case 'denuncia':
-                        $solicitud->codigo = "D-".$id;
-                        $typeabb = 'den';
-                        break;
-                }
-                $solicitud->ciudadano_id = $consulta->id;
-                $solicitud->organismo_id = $request->organismo;
-                
-                $solicitud->save();
+                case 'denuncia':
+                    $solicitud->codigo = "D-".$id;
+                    $typeabb = 'den';
+                    break;
+            }
+            $solicitud->organismo_id = $request->organismo;
+            
+            $solicitud->save();
 
-                if ($request->file('fileinput') != null) {
-                    $i = 1;
-                    foreach($request->file('fileinput') as $file)
-                    {
-                        $anexos = new Anexo();
-                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
-                        $file->move(public_path().'/img/', $name);
-                        $anexos->nombre = $name;
-                        $anexos->solicitud_id = $solicitud->id;
-                        $i++;
-                        $anexos->save();
+            if ($request->file('fileinput') != null) {
+                
+                $i = 1;
+                foreach($request->fileinput as $file)
+                {
+                    $anexos = new Anexo();
+                    //$name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                    $name = uniqid().'.'.$file->extension();
+                    $file->move(public_path().'/anexos/', $name);
+                    $anexos->nombre = $name;
+                    $anexos->solicitud_id = $solicitud->id;
+                    $i++;
+                    $anexos->save();
+                }
+            }
+            
+            if ($request->image != null) {
+                foreach($request->image as $file)
+                {
+                    if(\File::exists(public_path('anexos/'.$file))){
+                        \File::delete(public_path('anexos/'.$file));
                     }
+                    Anexo::where('nombre', $file)->delete();
                 }
-                
-                DB::table('logs')->insert(
-                    ['accion' => 'Actualizar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
-                );
-                
-                DB::commit();
-
-            } else {
-                $ciudadano = new Ciudadano();
-                $ciudadano->nombre = $request->nombre;
-                $ciudadano->apellido = $request->apellido;
-                $ciudadano->ci = $request->ci;
-                $ciudadano->institucion = $request->institucion;
-                $ciudadano->direccion = $request->direccion;
-                $ciudadano->telefono = $request->telefono;
-                $ciudadano->parroquia = $request->parroquia;
-                
-                $ciudadano->save();
-                
-                DB::table('logs')->insert(
-                    ['accion' => 'Registro de nuevo ciudadano - C.I '.$request->ci, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
-                );
-
-                $solicitud->tipo = $request->tipo;
-                $solicitud->desarrollo = $request->desarrollo;
-                $solicitud->codigo = "P-".$solicitud->id;
-                $solicitud->ciudadano_id = $ciudadano->id;
-                $solicitud->organismo_id = $request->organismo;
-                
-                $solicitud->save();
-
-                switch ($request->tipo) {
-                    case 'peticion':
-                        $solicitud->codigo = "P-".$id;
-                        $typeabb = 'pet';
-                        break;
-                        
-                    case 'reclamo':
-                        $solicitud->codigo = "R-".$id;
-                        $typeabb = 'rec';
-                        break;
-                            
-                    case 'denuncia':
-                        $solicitud->codigo = "D-".$id;
-                        $typeabb = 'den';
-                        break;
-                }
-
-                $solicitud->save();
-
-                if ($request->file('fileinput') != null) {
-                    $i = 1;
-                    foreach($request->file('fileinput') as $file)
-                    {
-                        $anexos = new Anexo();
-                        $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
-                        $file->move(public_path().'/img/', $name);
-                        $anexos->nombre = $name;
-                        $anexos->solicitud_id = $solicitud->id;
-                        $i++;
-                        $anexos->save();
-                    }
-                }
-                
-                DB::table('logs')->insert(
-                    ['accion' => 'Actualizar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
-                );
-                
-                DB::commit();
-            }            
+            }
+            
+            DB::table('logs')->insert(
+                ['accion' => 'Actualizar Solicitud - Codigo '.$id, 'cargo' => auth()->user()->username, 'usuario' => auth()->user()->name, 'created_at' => Carbon::now() ]
+            );
+            
+            DB::commit();      
 
 	        return redirect("/");
 
@@ -703,7 +642,14 @@ class SolicitudController extends Controller
      */
     public function destroy($id)
     {
+        $anexos = Anexo::where("solicitud_id", $id)->get();
+        foreach ($anexos as $key => $value) {
+            if(\File::exists(public_path('img/'.$value->nombre))){
+                \File::delete(public_path('img/'.$value->nombre));
+            }
+        }
         Anexo::where('solicitud_id', $id)->delete();
+        Beneficiario::where('solicitud_id', $id)->delete();
         Solicitud::destroy($id);
 
         DB::table('logs')->insert(

@@ -26,75 +26,20 @@
                                 
                                 @method('PUT')
                                 @csrf
-                                
-                                <div class="form-row mb-4">
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="nombre">Nombre </label>
-                                        <input type="text" class="form-control" name="nombre" id="nombre" value="{{ $solicitudes->ciudadano->nombre }}" maxlength="255" required >
-                                    </div>
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="apellido">Apellido</label><br>
-                                        <input type="text" class="form-control" name="apellido" id="apellido" value="{{ $solicitudes->ciudadano->apellido }}" maxlength="255" required >
-                                    </div>
-                                    <div class="col-md-4 col-12">
-                                        <label for="ci">Cedula</label><br>
-                                        <input type="text" class="form-control" name="ci" id="ci" value="{{ $solicitudes->ciudadano->ci }}" maxlength="255" required >
-                                    </div>
-                                </div>
             
                                 <div class="form-row mb-4">
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="institucion">Institución</label><br>
-                                        <div class="input-group mb-3">
-
-                                            @if ($solicitudes->ciudadano->institucion != NULL)
-                                            
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">                                                
-                                                        <input type="checkbox" id="chk-int" checked>
-                                                    </div>
-                                                </div>
-                                                <input type="text" class="form-control" value="{{ $solicitudes->ciudadano->institucion }}" id="inpt-int" name="institucion">
-
-                                            @else
-                                                
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">                                                
-                                                        <input type="checkbox" id="chk-int">
-                                                    </div>
-                                                </div>
-                                                <input type="text" class="form-control" disabled="true" id="inpt-int" name="institucion">
-                                            
-                                            @endif
-
-                                        </div>
-                                        <small class="text-muted text-help">Nombre de la Institución</small>
-                                    </div>
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="tipo">Tipo de Solicitud</label>
-                                        <select class="form-control" name="tipo" id="tipo-sol" data-width="100%" required>
+                                    
+                                    <div class="col-4">
+                                        <label for="tipo">Tipo</label>
+                                        <select name="tipo" id="tipo" class="form-control" data-width="100%" required>
                                             <option selected disabled>Selecciona</option>
                                             <option value="peticion">Peticion</option>
                                             <option value="reclamo">Reclamo</option>
                                             <option value="denuncia">Denuncia</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 col-12 mb-3">
-                                        <label for="parroquia">Parroquia</label><br>
-                                        <select name="parroquia" id="parroquia" class="form-control" data-width="100%">
-                                            <option selected disabled>Selecciona</option>
-                                            <option value="villa de cura">Villa de Cura</option>
-                                            <option value="augusto mijares">Augusto Mijares</option>
-                                            <option value="magdaleno">Magdaleno</option>
-                                            <option value="san francisco de asis">San Francisco de Asis</option>
-                                            <option value="valles de tucutunemo">Valles de Tucutunemo</option>
-                                        </select>
-                                    </div>
-            
-                                </div>
-            
-                                <div class="form-row mb-4">
-                                    <div class="col-4">
+
+                                    <div class="col-6">
                                         <label for="organismo">Organismos</label>
                                         <select name="organismo" id="organismo" class="form-control" data-width="100%" required>
                                             <option selected disabled>Selecciona</option>
@@ -102,21 +47,11 @@
                                                 <option value="{{ $i->id }}">{{ $i->nombre }}</option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                     
-                                    <div class="col-4">
-                                        <label for="telefono">Telefono</label>
-                                        <input type="text" class="form-control" value="{{ $solicitudes->ciudadano->telefono }}" name="telefono" id="telefono" required>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <label for="direccion">Dirección</label>
-                                        <textarea class="form-control" name="direccion" id="direccion">{{ $solicitudes->ciudadano->direccion }}</textarea>                                    
-                                    </div>                                    
+                                    </div>                                 
                                     
                                 </div>
                                 
-                                <div class="form-row mb-4">   
+                                <div class="form-row mb-4">    
                                     <div class="col-6">
                                         <label>Anexos</label><br>
                                         <div class="file-input-wrapper">
@@ -127,17 +62,22 @@
                                             <p id="imgerror" class="text-danger" style="display: none;"></p>
                                             <label id="clearbtn" type="button" class="btn btn-info" style="display: none">Limpiar</label>
                                             <label for="fileinput" class="btn btn-info">Buscar</label>
-                                            <input id="fileinput" id="fileinput" name="fileinput" type="file" accept="image/*">
+                                            <input id="fileinput" id="fileinput" name="fileinput[]" type="file" accept="image/*" multiple>
                                         </div>
-                                    </div>    
+                                    </div>
                                     
                                     <div class="col-6">
                                         <label for="desarrollo">Desarrollo</label>
-                                        <textarea class="form-control" name="desarrollo" id="desarrollo">{{ $solicitudes->desarrollo }}</textarea>
+                                        <textarea class="form-control" name="desarrollo" cols="5" id="desarrollo">{{ $solicitudes->desarrollo }}</textarea>
                                     </div>
                                 </div>
                                 
                                 <div class="form-row mb-4">
+                                    <div class="col-md-4 col-12">
+                                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#before">
+                                            Quitar Anexos
+                                        </button>
+                                    </div>
                                     <div class="col-md-4 col-12">
                                         <a href="{{ url('/') }}" type="button" class="btn btn-secondary">
                                             Volver
@@ -145,6 +85,35 @@
                                     </div>
                                     <div class="col-md-4 col-12">
                                         <button type="submit" class="btn btn-info">Enviar</button>
+                                    </div>
+                                </div>
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="before" tabindex="-1" role="dialog" aria-labelledby="beforeLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="beforeLabel">Anexos</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                        <div class="modal-body">
+                                            <div class="card-columns">
+                                                @foreach ($solicitudes->anexos as $item)         
+                                                    <div class="card">
+                                                        <label class="image-checkbox">
+                                                            <input type="checkbox" name="image[]" value="{{ $item->nombre }}" class="anexo-quitar" />
+                                                            <img class="card-img" src="http://localhost/aciud/public/anexos/{{ $item->nombre }}" />
+                                                        </label>                                               
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -162,6 +131,7 @@
 <script>
     $(document).ready(function() {
         $('#fileinput').change((e) => {
+
             var input = e.target;
 
             // imagen de preview
@@ -219,15 +189,13 @@
             reader.readAsDataURL(file);
         });
 
-        $("#chk-int").change((e) => {
-            var prop = $("#chk-int").prop( "checked" );
+        // sync the state to the input
+        $(".image-checkbox").on("click", function (e) {
+            $(this).toggleClass('image-checkbox-checked');
+            var $checkbox = $(this).find('input[type="checkbox"]');
+            $checkbox.prop("checked",!$checkbox.prop("checked"))
 
-            if (!prop) {
-                $("#inpt-int").val("");
-            }
-        
-            $("#inpt-int").prop( "disabled", !prop );
-
+            e.preventDefault();
         });
         
     });
