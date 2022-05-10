@@ -166,8 +166,9 @@ class SolicitudController extends Controller
                 foreach($request->file('fileinput') as $file)
                 {
                     $anexos = new Anexo();
-                    $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
-                    $file->move(public_path().'/img/', $name);
+                    //$name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                    $name = uniqid().'.'.$file->extension();
+                    $file->move(public_path().'/anexos/', $name);
                     $anexos->nombre = $name;
                     $anexos->solicitud_id = $solicitud->id;
                     $i++;
@@ -310,8 +311,9 @@ class SolicitudController extends Controller
                 foreach($request->file('fileinput') as $file)
                 {
                     $anexos = new Anexo();
-                    $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
-                    $file->move(public_path().'/img/', $name);
+                    //$name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                    $name = uniqid().'.'.$file->extension();
+                    $file->move(public_path().'/anexos/', $name);
                     $anexos->nombre = $name;
                     $anexos->solicitud_id = $solicitud->id;
                     $i++;
@@ -419,8 +421,9 @@ class SolicitudController extends Controller
                 foreach($request->file('fileinput') as $file)
                 {
                     $anexos = new Anexo();
-                    $name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
-                    $file->move(public_path().'/img/', $name);
+                    //$name = $typeabb.$solicitud->id.'pic'.$i.'.'.$file->extension();
+                    $name = uniqid().'.'.$file->extension();
+                    $file->move(public_path().'/anexos/', $name);
                     $anexos->nombre = $name;
                     $anexos->solicitud_id = $solicitud->id;
                     $i++;
