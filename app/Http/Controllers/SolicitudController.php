@@ -710,4 +710,11 @@ class SolicitudController extends Controller
         //return view('solicituds.graficas', compact($data));
         
     }
+    
+    public function filter(Request $request)
+    {
+        //return $request;
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('status', $request->filtroStatus)->orWhereIn('tipo', $request->filtroTipo)->orWhereIn('organismo_id', $request->filtroOrganismo)->get();
+        return $solicitudes;
+    }
 }

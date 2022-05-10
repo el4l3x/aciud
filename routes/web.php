@@ -37,4 +37,5 @@ Route::post('/solicitudes/status/{id}', 'SolicitudController@status');
 Route::get('/graficos/total', 'SolicitudController@graficast');
 Route::get('/graficos/status', 'SolicitudController@graficass');
 Route::get('/graficos/tipo', 'SolicitudController@graficasti');
+Route::post('/solicitudes/filter', 'SolicitudController@filter');
 

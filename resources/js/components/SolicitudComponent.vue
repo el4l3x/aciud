@@ -28,29 +28,14 @@
         </b-form-group>
 
       </b-col>
+      
+      <b-col sm="6" md="5" class="my-1">
 
-      <b-col sm="8" lg="7" class="my-1">
+      </b-col>
 
-        <b-form-group
-          label="Filtrar por:"
-          label-cols-sm="5"
-          label-cols-md="4"
-          label-cols-lg="3"
-          label-align-sm="right"
-          label-size="sm"
-          class="mb-0"
-        >
+      <b-col sm="2" lg="2" class="my-1">
 
-          <b-form-checkbox-group
-            v-model="filterOn"
-            class="mt-1"
-          >
-            <b-form-checkbox value="organismo">Organismo</b-form-checkbox>
-            <b-form-checkbox value="tipo">Tipo</b-form-checkbox>
-            <b-form-checkbox value="status">Status</b-form-checkbox>
-          </b-form-checkbox-group>
-
-        </b-form-group>
+          <b-button variant="outline-info" v-b-modal.filtros>Filtros</b-button>  
                 
       </b-col>
 
@@ -58,7 +43,8 @@
 
     <!-- Main table element -->
     <b-table
-      :items="solicitudes"
+      id="solicituds-table"
+      :items="data"
       :fields="fields"
       :current-page="currentPage"
       :per-page="perPage"
@@ -162,6 +148,47 @@
       </template>
     </b-modal>
 
+    <!-- filtros modal -->
+    <b-modal id="filtros" title="Filtros" @ok="filtroOk()">
+      <b-form-select v-model="filtroStatus" class="mb-3" multiple>
+        <b-form-select-option :value="null">Por Status</b-form-select-option>
+        <b-form-select-option value="pendiente">Pendiente</b-form-select-option>
+        <b-form-select-option value="realizado">Realizado</b-form-select-option>
+        <b-form-select-option value="en proceso">En Proceso</b-form-select-option>
+        <b-form-select-option value="en espera de">En espera de</b-form-select-option>
+      </b-form-select>
+      
+      <b-form-select v-model="filtroTipo" class="mb-3" multiple>
+        <b-form-select-option :value="null">Por Tipo</b-form-select-option>
+        <b-form-select-option value="peticion">Peticion</b-form-select-option>
+        <b-form-select-option value="reclamo">Reclamo</b-form-select-option>
+        <b-form-select-option value="denuncia">Denuncia</b-form-select-option>
+      </b-form-select>
+      
+      <b-form-select v-model="filtroOrganismo" class="mb-3" multiple>
+        <b-form-select-option :value="null">Por Tipo</b-form-select-option>
+        <b-form-select-option :value="1">Coordinación de tecnología e informática</b-form-select-option>
+        <b-form-select-option :value="2">Dirección de desarrollo social</b-form-select-option>
+        <b-form-select-option :value="3">Dirección de Ingeniería Municipal</b-form-select-option>
+        <b-form-select-option :value="4">Dirección de servicios Públicos municipales</b-form-select-option>
+        <b-form-select-option :value="5">Dirección de Catastro y Ejido</b-form-select-option>
+        <b-form-select-option :value="6">Instituto autónomo de la policía municipal</b-form-select-option>
+        <b-form-select-option :value="7">Protección civil</b-form-select-option>
+        <b-form-select-option :value="8">Protección del niño</b-form-select-option>
+        <b-form-select-option :value="9">Registro civil</b-form-select-option>
+        <b-form-select-option :value="10">Instituto para la mujer</b-form-select-option>
+        <b-form-select-option :value="11">Instituto municipal para la vivienda</b-form-select-option>
+      </b-form-select>
+      <template #modal-footer="{ ok, cancel }">
+        <b-button size="sm" variant="primary" @click="ok()">
+            Filtrar
+        </b-button>
+        <b-button size="sm" @click="cancel()">
+            Cancelar
+        </b-button>
+      </template>
+    </b-modal>
+
   </b-container>
 </template>
 
@@ -183,6 +210,10 @@
       return {
         status: 'pendiente',
         filterOn: [],
+        filterSecond: [],
+        filtroStatus: [null],
+        filtroTipo: [null],
+        filtroOrganismo: [null],
         fields: [
           {
             key: 'beneficiarios',
@@ -264,6 +295,7 @@
           content: '',
           idStatus: ''
         },
+        data: [],
       }
     },
     computed: {
@@ -279,6 +311,7 @@
     mounted() {
       // Set the initial number of items
       this.totalRows = this.solicitudes.length;
+      this.data = this.solicitudes;
     },
     methods: {
       deleteOk(id){
@@ -299,6 +332,23 @@
         .then(response=>{
             //console.log(response);
             window.location = "/";
+        }).catch(e => {
+          console.log(e.response)
+        });
+      },
+      
+      filtroOk(){
+        axios.post('/solicitudes/filter', {
+          _method: 'post',
+          filtroStatus: this.filtroStatus,
+          filtroTipo: this.filtroTipo,
+          filtroOrganismo: this.filtroOrganismo
+        })
+        .then(response=>{
+            this.data = response.data;
+            this.$root.$emit('bv::refresh::table', 'solicituds-table')
+            
+            console.log(response.data);        
         }).catch(e => {
           console.log(e.response)
         });
@@ -331,6 +381,9 @@
         this.deleteModal.idDelete = item.id
         this.deleteModal.content = `Esta seguro que desea borrar la solicitud: ${item.codigo}??`
         this.$root.$emit('bv::show::modal', this.deleteModal.id, button)
+      },
+      secondFilter(select) {
+        console.log(this.filterSecond);
       },
       statusmodal(item, index, button) {
         this.statusModal.title = `Cambiar Status`
