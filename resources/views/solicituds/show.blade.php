@@ -55,13 +55,13 @@
                                         <div class="row">                                            
 
                                             <div class="col">
-                                                <p class="text-capitalize">Ciudadano: {{ $solicitudes['beneficiarios']['0']['nombre'].' '.$solicitudes['beneficiarios']['0']['apellido'] }} C.I {{ $solicitudes['beneficiarios']['0']['ci'] }}</p>
+                                                <p class="text-capitalize">Ciudadano: {{ $solicitudes['involucrados']['0']['nombre'].' '.$solicitudes['involucrados']['0']['apellido'] }} C.I {{ $solicitudes['involucrados']['0']['ci'] }}</p>
                                             </div>
         
                                             <div class="col">
                                                 <p class="text-capitalize">
-                                                    @if (isset($solicitudes['beneficiarios']['0']['telefono']))
-                                                        Telf.: {{ $solicitudes['beneficiarios']['0']['telefono'] }}
+                                                    @if (isset($solicitudes['involucrados']['0']['telefono']))
+                                                        Telf.: {{ $solicitudes['involucrados']['0']['telefono'] }}
                                                     @endif
                                                 </p>
                                             </div>
@@ -72,7 +72,7 @@
 
                                             <div class="col">
                                                 <p class="text-capitalize">
-                                                    {{ $solicitudes['beneficiarios']['0']['parroquia'].' '.$solicitudes['beneficiarios']['0']['sector'] }}                                    
+                                                    {{ $solicitudes['involucrados']['0']['parroquia'].' '.$solicitudes['involucrados']['0']['sector'] }}                                    
                                                 </p>
                                             </div>
             

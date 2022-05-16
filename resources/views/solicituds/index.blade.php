@@ -30,11 +30,9 @@
                                             </button>
                                             </div>
                                             <div class="modal-body">
-                                                <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <a href="{{ route('solicitudes.create') }}" type="button" class="btn btn-secondary">Personal</a>
-                                                    <a href="/solicitudes/create/terceros" type="button" class="btn btn-secondary">A terceros</a>
-                                                    <a href="/solicitudes/create/institucional" type="button" class="btn btn-secondary">Institucional</a>
-                                                </div>
+                                                <a href="{{ route('solicitudes.create') }}" type="button" class="btn btn-outline-info">Personal</a>
+                                                <a href="/solicitudes/create/terceros" type="button" class="btn btn-outline-info">A terceros</a>
+                                                <a href="/solicitudes/create/institucional" type="button" class="btn btn-outline-info">Institucional</a>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>

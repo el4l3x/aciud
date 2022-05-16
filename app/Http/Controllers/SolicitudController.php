@@ -99,6 +99,7 @@ class SolicitudController extends Controller
 				'parroquia' => 'required|string',
 				'sector' => 'required|string',
 				'telefono' => 'nullable|numeric',
+				'codeph' => 'nullable|numeric',
 				'tipo' => 'required|alpha',
 				'organismo' => 'required|integer',
 				'desarrollo' => 'required'
@@ -118,7 +119,7 @@ class SolicitudController extends Controller
                 $ciudadano->nombre = $request->nombre;
                 $ciudadano->apellido = $request->apellido;
                 $ciudadano->ci = $request->ci;
-                $ciudadano->telefono = $request->telefono;
+                $ciudadano->telefono = $request->codeph.' '.$request->telefono;
                 $ciudadano->sector = $request->sector;
                 $ciudadano->parroquia = $request->parroquia;
                 
@@ -246,7 +247,7 @@ class SolicitudController extends Controller
                 $ciudadano->apellido = $request->apellido;
                 $ciudadano->ci = $request->ci;
                 $ciudadano->sector = $request->sector;
-                $ciudadano->telefono = $request->telefono;
+                $ciudadano->telefono = $request->codeph.' '.$request->telefono;
                 $ciudadano->parroquia = $request->parroquia;
                 
                 $ciudadano->save();
@@ -266,7 +267,7 @@ class SolicitudController extends Controller
                 $ciudadano->apellido = $request->apellidob;
                 $ciudadano->ci = $request->cib;
                 $ciudadano->sector = $request->sectorb;
-                $ciudadano->telefono = $request->telefonob;
+                $ciudadano->telefono = $request->codeph.' '.$request->telefonob;
                 $ciudadano->parroquia = $request->parroquiab;
                 
                 $ciudadano->save();
@@ -376,7 +377,7 @@ class SolicitudController extends Controller
             if (!isset($consulta->nombre)) {
                 $institucion = new Institucion();
                 $institucion->nombre = $request->nombre;
-                $institucion->telefono = $request->telefono;
+                $institucion->telefono = $request->codeph.' '.$request->telefono;
                 $institucion->direccion = $request->direccion;
                 
                 $institucion->save();
@@ -486,7 +487,7 @@ class SolicitudController extends Controller
         $fecha_inicial = new Carbon($desde);
 		$fecha_final = new Carbon($hasta);
 
-        $solicitudes = Solicitud::with('ciudadano')->with('organismo')->where('created_at', '<=', $fecha_final)->where('created_at', '>=', $fecha_inicial)->get();
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->where('created_at', '<=', $fecha_final)->where('created_at', '>=', $fecha_inicial)->get();
 
         //return $solicitudes;
         return view('solicituds.index')
