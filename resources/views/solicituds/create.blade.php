@@ -97,6 +97,8 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
+        $('#loading').fadeOut();
+        
         $('#fileinput').change((e) => {
 
             var input = e.target;

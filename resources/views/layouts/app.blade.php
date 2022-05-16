@@ -87,6 +87,13 @@
         </nav>
 
         <main class="py-4">
+            <div class="loading" id="loading">
+                <div>
+                    <div class="spinner-grow mb-2 ml-4" style="width: 5rem; height: 5rem" role="status">
+                    </div>
+                    <p>Espere un momento...</p>
+                </div>
+            </div>
             @yield('content')
         </main>
     </div>
