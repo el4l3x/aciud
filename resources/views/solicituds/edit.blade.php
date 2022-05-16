@@ -32,19 +32,25 @@
                                     <div class="col-4">
                                         <label for="tipo">Tipo</label>
                                         <select name="tipo" id="tipo" class="form-control" data-width="100%" required>
-                                            <option selected disabled>Selecciona</option>
-                                            <option value="peticion">Peticion</option>
-                                            <option value="reclamo">Reclamo</option>
-                                            <option value="denuncia">Denuncia</option>
+                                            @foreach ($tipos as $i)
+                                                @if ($i == $solicitudes->tipo)                                                    
+                                                    <option selected value="{{ $i }}">{{ ucfirst($i) }}</option>                                                    
+                                                @else                                                    
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endif
+                                            @endforeach
                                         </select>
                                     </div>
 
                                     <div class="col-6">
                                         <label for="organismo">Organismos</label>
                                         <select name="organismo" id="organismo" class="form-control" data-width="100%" required>
-                                            <option selected disabled>Selecciona</option>
                                             @foreach ($organismos as $i)
-                                                <option value="{{ $i->id }}">{{ $i->nombre }}</option>
+                                                @if ($i->id == $solicitudes->organismo_id)                                                    
+                                                    <option selected value="{{ $i->id }}">{{ $i->nombre }}</option>                                                    
+                                                @else                                                    
+                                                    <option value="{{ $i->id }}">{{ $i->nombre }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>                                 

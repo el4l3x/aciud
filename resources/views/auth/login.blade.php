@@ -2,10 +2,7 @@
 
 @section('content')
 <div class="container">
-    <br>
-    <br>
-    <br>
-    <br>
+
     <div class="row align-items-center justify-content-center">
         <div class="col-md-5">
             <img src="{{ asset('img\LOGO-ALCALDIA-ANAHIS-PALACIOS-NEGRO.png') }}" alt="" class="img-fluid align-self-center mr-3">
