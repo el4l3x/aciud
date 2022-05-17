@@ -12,24 +12,39 @@ class initialSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'name' => 'Vansuli Mita',
+            'name' => 'Supervisor',
             'rol' => '2',
-            'username' => 'Supervisor',
+            'username' => 'Vansuli Mita',
             'password' => Hash::make('00000000')
         ]);
         
         DB::table('users')->insert([
-            'name' => 'Natali',
+            'name' => 'Atencion al Ciudadano',
             'rol' => '1',
-            'username' => 'Atencion al Ciudadano',
+            'username' => 'Natali',
             'password' => Hash::make('00000000')
         ]);
         
         DB::table('users')->insert([
-            'name' => 'Zapata',
-            'rol' => '3',
-            'username' => 'Director General',
+            'name' => 'Atencion al Ciudadano',
+            'rol' => '1',
+            'username' => 'Yessica',
             'password' => Hash::make('00000000')
+        ]);
+        
+        DB::table('users')->insert([
+            'name' => 'Director General',
+            'rol' => '3',
+            'username' => 'Zapata',
+            'password' => Hash::make('00000000')
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Dirección de despacho',
+        ]);
+        
+        DB::table('organismos')->insert([
+            'nombre' => 'Despacho de alcaldia',
         ]);
         
         DB::table('organismos')->insert([

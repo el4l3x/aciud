@@ -17,7 +17,7 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="/graficos/total">Total</a>
                                         <a class="dropdown-item" href="/graficos/status">Status</a>
-                                        <a class="dropdown-item" href="/graficos/tipo">Tipo</a>
+                                        <!--<a class="dropdown-item" href="/graficos/tipo">Tipo</a>-->
                                     </div>
                                 </div>
                                 <!--<a href="{{ route('solicitudes.create') }}">

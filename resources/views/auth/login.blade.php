@@ -18,9 +18,10 @@
 
                     <div class="col-md-6">
                         <select name="username" id="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" required autocomplete="username" autofocus>
-                            <option value="Atencion al Ciudadano">Atención al Ciudadano</option>
-                            <option value="Supervisor">Supervisor</option>
-                            <option value="Director General">Director General</option>
+                            <option value="Natali">Atención al Ciudadano - Natali</option>
+                            <option value="Yessica">Atención al Ciudadano - Yessica</option>
+                            <option value="Vansuli Mita">Supervisor</option>
+                            <option value="Zapata">Director General</option>
                         </select>
 
                         @error('username')
