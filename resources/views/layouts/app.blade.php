@@ -20,6 +20,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/index.css') }}" rel="stylesheet">
+
+    <script>window._asset = '{{ asset('') }}';</script>
     
 </head>
 <body>
@@ -51,7 +53,7 @@
                         @else
                             @if (auth()->user()->rol == 2)                                
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/graficos/total">
+                                    <a class="nav-link" href="{{ route('graficast') }}">
                                         <b-icon icon="pie-chart" type="button" variant="default" id="nav-chart"></b-icon>
                                         <b-tooltip target="nav-chart" triggers="hover">
                                             Indices de Gestion

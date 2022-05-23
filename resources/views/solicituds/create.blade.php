@@ -22,7 +22,8 @@
                                 </div>
                             @endif
 
-                            <form method="POST" action="/solicitudes" enctype="multipart/form-data">
+                            <!--<form method="POST" action="/solicitudes" enctype="multipart/form-data">-->
+                            <form method="POST" action="{{ route('solicitudes.store') }}" enctype="multipart/form-data">
                                 
                                 @csrf
                                 

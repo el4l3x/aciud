@@ -60,7 +60,6 @@ Vue.use(HighchartsVue)
 
 Vue.component('v-select', vSelect)
 
-
 const app = new Vue({
     el: '#app',
 });

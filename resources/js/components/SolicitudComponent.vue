@@ -315,30 +315,30 @@
     },
     methods: {
       deleteOk(id){
-        axios.post('/solicitudes/'+id, {
+        axios.post('/aciud/public/solicitudes/'+id, {
           _method: 'delete'
         })
         .then(response=>{
-            window.location = "/";
+            window.location = "/aciud/public/";
         }).catch(e => {
           console.log(e.response)
         });
       },
       statusOk(id){
-        axios.post('/solicitudes/status/'+id, {
+        axios.post('/aciud/public/solicitudes/status/'+id, {
           _method: 'post',
           status: this.status
         })
         .then(response=>{
             //console.log(response);
-            window.location = "/";
+            window.location = "/aciud/public/";
         }).catch(e => {
           console.log(e.response)
         });
       },
       
       filtroOk(){
-        axios.post('/solicitudes/filter', {
+        axios.post('/aciud/public/solicitudes/filter', {
           _method: 'post',
           filtroStatus: this.filtroStatus,
           filtroTipo: this.filtroTipo,
@@ -391,11 +391,11 @@
         this.$root.$emit('bv::show::modal', this.statusModal.id, button)
       },
       urlShow(item) {
-        var url = "/solicitudes/"+item.id;
+        var url = "/aciud/public/solicitudes/"+item.id;
         return url;
       },
       urlEdit(item) {
-        var url = "/solicitudes/"+item.id+"/edit";
+        var url = "/aciud/public/solicitudes/"+item.id+"/edit";
         return url;
       },
       resetDeleteModal() {

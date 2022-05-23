@@ -31,8 +31,8 @@
                                             </div>
                                             <div class="modal-body">
                                                 <a href="{{ route('solicitudes.create') }}" type="button" class="btn btn-outline-info">Personal</a>
-                                                <a href="/solicitudes/create/terceros" type="button" class="btn btn-outline-info">A terceros</a>
-                                                <a href="/solicitudes/create/institucional" type="button" class="btn btn-outline-info">Institucional</a>
+                                                <a href="{{ asset('/solicitudes/create/terceros') }}" type="button" class="btn btn-outline-info">A terceros</a>
+                                                <a href="{{ asset('/solicitudes/create/institucional') }}" type="button" class="btn btn-outline-info">Institucional</a>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
