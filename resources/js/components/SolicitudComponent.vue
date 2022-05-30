@@ -29,11 +29,11 @@
 
       </b-col>
       
-      <b-col sm="6" md="5" class="my-1">
+      <b-col sm="5" md="4" class="my-1">
 
       </b-col>
-
-      <b-col sm="2" lg="2" class="my-1">
+      
+      <b-col sm="3" lg="3" class="my-1">
 
           <b-button variant="outline-info" v-b-modal.filtros>Filtros</b-button>  
                 
@@ -151,7 +151,7 @@
     <!-- filtros modal -->
     <b-modal id="filtros" title="Filtros" @ok="filtroOk()">
       <b-form-select v-model="filtroStatus" class="mb-3" multiple>
-        <b-form-select-option :value="null">Por Status</b-form-select-option>
+        <b-form-select-option :value="null">Todos</b-form-select-option>
         <b-form-select-option value="pendiente">Pendiente</b-form-select-option>
         <b-form-select-option value="realizado">Realizado</b-form-select-option>
         <b-form-select-option value="en proceso">En Proceso</b-form-select-option>
@@ -159,25 +159,27 @@
       </b-form-select>
       
       <b-form-select v-model="filtroTipo" class="mb-3" multiple>
-        <b-form-select-option :value="null">Por Tipo</b-form-select-option>
+        <b-form-select-option :value="null">Todos</b-form-select-option>
         <b-form-select-option value="peticion">Peticion</b-form-select-option>
         <b-form-select-option value="reclamo">Reclamo</b-form-select-option>
         <b-form-select-option value="denuncia">Denuncia</b-form-select-option>
       </b-form-select>
       
       <b-form-select v-model="filtroOrganismo" class="mb-3" multiple>
-        <b-form-select-option :value="null">Por Tipo</b-form-select-option>
-        <b-form-select-option :value="1">Coordinación de tecnología e informática</b-form-select-option>
-        <b-form-select-option :value="2">Dirección de desarrollo social</b-form-select-option>
-        <b-form-select-option :value="3">Dirección de Ingeniería Municipal</b-form-select-option>
-        <b-form-select-option :value="4">Dirección de servicios Públicos municipales</b-form-select-option>
-        <b-form-select-option :value="5">Dirección de Catastro y Ejido</b-form-select-option>
-        <b-form-select-option :value="6">Instituto autónomo de la policía municipal</b-form-select-option>
-        <b-form-select-option :value="7">Protección civil</b-form-select-option>
-        <b-form-select-option :value="8">Protección del niño</b-form-select-option>
-        <b-form-select-option :value="9">Registro civil</b-form-select-option>
-        <b-form-select-option :value="10">Instituto para la mujer</b-form-select-option>
-        <b-form-select-option :value="11">Instituto municipal para la vivienda</b-form-select-option>
+        <b-form-select-option :value="null">Todos</b-form-select-option>
+        <b-form-select-option value="1">Dirección de despacho</b-form-select-option>
+        <b-form-select-option value="2">Despacho de alcaldia</b-form-select-option>
+        <b-form-select-option value="3">Coordinación de tecnología e informática</b-form-select-option>
+        <b-form-select-option value="4">Dirección de desarrollo social</b-form-select-option>
+        <b-form-select-option value="5">Dirección de Ingeniería Municipal</b-form-select-option>
+        <b-form-select-option value="6">Dirección de servicios Públicos municipales</b-form-select-option>
+        <b-form-select-option value="7">Dirección de Catastro y Ejido</b-form-select-option>
+        <b-form-select-option value="8">Instituto autónomo de la policía municipal</b-form-select-option>
+        <b-form-select-option value="9">Protección civil</b-form-select-option>
+        <b-form-select-option value="10">Protección del niño</b-form-select-option>
+        <b-form-select-option value="11">Registro civil</b-form-select-option>
+        <b-form-select-option value="12">Instituto para la mujer</b-form-select-option>
+        <b-form-select-option value="13">Instituto municipal para la vivienda</b-form-select-option>
       </b-form-select>
       <template #modal-footer="{ ok, cancel }">
         <b-button size="sm" variant="primary" @click="ok()">
@@ -218,25 +220,6 @@
           {
             key: 'beneficiarios',
             formatter: 'nombreCompleto',
-            /*formatter: (value, key, item) => {
-              if (item.institucion != null) {
-                var idben = "1"
-                var nombre = "b"
-                item.involucrados.forEach(element => {
-                  if (element.status == "beneficiario") {
-                    idben = element.ciudadano_id
-                  }
-                });
-                item.beneficiarios.forEach(element => {
-                  if (element.id == idben) {
-                    nombre = element.nombre
-                  }
-                });
-                return nombre
-              } else {                
-                return item.institucion.nombre
-              }
-            },*/
             label: 'Beneficiario',
             sortable: true,
             thClass: 'text-center negrita',

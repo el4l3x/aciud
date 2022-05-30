@@ -38,4 +38,5 @@ Route::get('/graficos/total', 'SolicitudController@graficast')->name('graficast'
 Route::get('/graficos/status', 'SolicitudController@graficass');
 Route::get('/graficos/tipo', 'SolicitudController@graficasti');
 Route::post('/solicitudes/filter', 'SolicitudController@filter');
+Route::post('/solicitudes/listar', 'SolicitudController@listar')->name('pdf');
 

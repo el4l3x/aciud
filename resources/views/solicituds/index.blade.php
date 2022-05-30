@@ -99,7 +99,13 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        $('#loading').fadeOut();        
+        $('#loading').fadeOut();
+
+        $.ajaxSetup({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			}
+		});
     });
 </script>
 @endpush

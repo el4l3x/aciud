@@ -13,6 +13,7 @@ use App\Beneficiario;
 use DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class SolicitudController extends Controller
 {
@@ -717,5 +718,58 @@ class SolicitudController extends Controller
         //return $request;
         $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('status', $request->filtroStatus)->orWhereIn('tipo', $request->filtroTipo)->orWhereIn('organismo_id', $request->filtroOrganismo)->get();
         return $solicitudes;
+    }
+    
+    public function listar(Request $request)
+    {
+        //$data = $request->data;
+        //return $request;
+        $allStatus = 0;
+        $allTipo = 0;
+        $allOrganismo = 0;
+        foreach ($request->filtroStatus as $key => $value) {
+            if ($value == 'null') {
+                $allStatus = 1;
+            }
+        }
+        foreach ($request->filtroTipo as $key => $value) {
+            if ($value == 'null') {
+                $allTipo = 1;
+            }
+        }
+        foreach ($request->filtroOrganismo as $key => $value) {
+            if ($value == 'null') {
+                $allOrganismo = 1;
+            }
+        }
+        //return $allStatus;
+        if ($allStatus != 1 && $allTipo != 1 && $allOrganismo != 1) {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('status', $request->filtroStatus)->orWhereIn('tipo', $request->filtroTipo)->orWhereIn('organismo_id', $request->filtroOrganismo)->get();
+        } elseif ($allStatus != 1 && $allTipo != 1) {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('status', $request->filtroStatus)->orWhereIn('tipo', $request->filtroTipo)->get();
+        } elseif ($allStatus != 1 && $allOrganismo != 1) {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('status', $request->filtroStatus)->orWhereIn('organismo_id', $request->filtroOrganismo)->get();
+        } elseif ($allTipo != 1 && $allOrganismo != 1) {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('tipo', $request->filtroTipo)->orWhereIn('organismo_id', $request->filtroOrganismo)->get();
+        } elseif ($allStatus != 1) {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('status', $request->filtroStatus)->get();
+        } elseif ($allTipo != 1) {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('tipo', $request->filtroTipo)->get();
+        } elseif ($allOrganismo != 1) {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->whereIn('organismo_id', $request->filtroOrganismo)->get();
+        } else {
+            $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->get();
+        }
+        
+        //return $solicitudes;
+        //return redirect()->route('pdf.listado');
+        //return view('pdf.listado')->with('solicitudes', $solicitudes);
+        //return $data;
+        //$pdf = PDF::loadView("pdf.listado", $solicitudes);
+        //$pdf = PDF::loadView("pdf.listado", compact('solicitudes'));
+        $pdf = PDF::loadView("pdf.listado", compact('solicitudes'));
+
+        return $pdf->stream();
+        //return $pdf->download('Listado.pdf');
     }
 }
