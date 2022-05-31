@@ -24,7 +24,7 @@
 
                             <h4>Institucion</h4>
 
-                            <form method="POST" action="/solicitudes/store/instituciones" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('storei') }}" enctype="multipart/form-data">
                                 
                                 @csrf
                                 

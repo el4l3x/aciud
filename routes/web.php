@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 //Route::get('/', 'HomeController@index')->name('home');
 
-Route::get('/', 'SolicitudController@index')->name('home');
+//Route::get('/', 'SolicitudController@index')->name('inicio');
 
 Auth::routes();
 
@@ -30,8 +30,8 @@ Route::post('/updatepass', 'HomeController@updatepass')->name('updatepass');
 //SOLICITUDS
 Route::resource('solicitudes', 'SolicitudController');
 Route::get('/solicitudes/create/{tipo}', 'SolicitudController@createinst');
-Route::post('/solicitudes/store/terceros', 'SolicitudController@storeter');
-Route::post('/solicitudes/store/instituciones', 'SolicitudController@storeins');
+Route::post('/solicitudes/store/terceros', 'SolicitudController@storeter')->name('storet');
+Route::post('/solicitudes/store/instituciones', 'SolicitudController@storeins')->name('storei');
 Route::post('/solicitudes/rf', 'SolicitudController@rf');
 Route::post('/solicitudes/status/{id}', 'SolicitudController@status');
 Route::get('/graficos/total', 'SolicitudController@graficast')->name('graficast');

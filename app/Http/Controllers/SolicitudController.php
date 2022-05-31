@@ -200,7 +200,8 @@ class SolicitudController extends Controller
 
             //return "Ciudadano y Solicitud registrados exitosamente";
 
-	        return redirect("/");
+	        //return redirect("/");
+	        return redirect()->route('solicitudes.index');
 
 		} catch (\Exception $e) {
 			DB::rollback();
@@ -343,7 +344,8 @@ class SolicitudController extends Controller
 
             DB::commit();
 
-	        return redirect("/");
+	        //return redirect("/");
+	        return redirect()->route('solicitudes.index');
 
 		} catch (\Exception $e) {
 			DB::rollback();
@@ -439,7 +441,8 @@ class SolicitudController extends Controller
 
             DB::commit();
 
-	        return redirect("/");
+	        //return redirect("/");
+	        return redirect()->route('solicitudes.index');
 
 		} catch (\Exception $e) {
 			DB::rollback();
@@ -594,7 +597,8 @@ class SolicitudController extends Controller
             
             DB::commit();      
 
-	        return redirect("/");
+	        //return redirect("/");
+	        return redirect()->route('solicitudes.index');
 
 		} catch (\Exception $e) {
 			DB::rollback();

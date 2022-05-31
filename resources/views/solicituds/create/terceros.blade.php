@@ -24,7 +24,7 @@
 
                             <h4>Solicitante</h4>
 
-                            <form method="POST" action="/solicitudes/store/terceros" enctype="multipart/form-data">
+                            <form method="POST" action="{{ route('storet') }}" enctype="multipart/form-data">
                                 
                                 @csrf
                                 

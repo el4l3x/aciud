@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use App\Solicitud;
 
 class HomeController extends Controller
 {
@@ -38,7 +39,7 @@ class HomeController extends Controller
     {
         
         $validatedData = $request->validate([
-            'password' => 'required|password',
+            'password' => 'required',
             'contraseña' => 'required|confirmed|alpha_num|min:8',
             'contraseña_confirmation' => 'required|alpha_num|min:8',
         ]);
@@ -51,6 +52,10 @@ class HomeController extends Controller
         
         $update->save();
 
-        return view('home');
+        $solicitudes = Solicitud::with('institucion')->with('organismo')->with('anexos')->with('involucrados')->get();
+
+        return view('solicituds.index')
+            ->with('solicitudes', $solicitudes);
+        //return view('home');
     }
 }
